@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . "/../vendor/autoload.php";
+
+use Symfony\Component\Console\Application;
+use Fedot\NetMonitor\Command\MonitorCommand;
+
+$containerBuilder = new \DI\ContainerBuilder();
+$containerBuilder->addDefinitions(__DIR__ . '/../src/Fedot/NetMonitor/Resources/services.php');
+
+$container = $containerBuilder->build();
+
+$app = $container->get(Application::class);
+
+$app->run();

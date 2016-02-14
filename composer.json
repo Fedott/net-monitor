@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Fedot\\": "src/Fedot/"
+        }
+    },
+    "require": {
+        "symfony/console": "^3.0",
+        "php-di/php-di": "^5.2",
+        "doctrine/annotations": "^1.2"
+    }
+}
