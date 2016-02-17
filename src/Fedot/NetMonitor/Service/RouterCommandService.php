@@ -3,6 +3,7 @@
 namespace Fedot\NetMonitor\Service;
 
 use DI\Annotation\Inject;
+use Fedot\NetMonitor\DTO\Connection;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
@@ -133,6 +134,35 @@ XML;
                 'sport-out' => (string) $natSection->{"sport-out"},
                 'dport-out' => (string) $natSection->{"dport-out"},
             ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return Connection[]
+     */
+    public function getConnections()
+    {
+        $connections = $this->parseConnections();
+
+        $result = [];
+
+        foreach ($connections as $connection) {
+            $connectionObject = new Connection();
+            $connectionObject
+                ->setProtocol($connection['protocol'])
+                ->setSource($connection['src'])
+                ->setSourcePort($connection['sport'])
+                ->setSourceOut($connection['src-out'])
+                ->setSourceOutPort($connection['sport-out'])
+                ->setDestination($connection['dst'])
+                ->setDestinationPort($connection['dport'])
+                ->setDestinationOut($connection['src-out'])
+                ->setDestinationOutPort($connection['dport-out'])
+            ;
+
+            $result[] = $connectionObject;
         }
 
         return $result;
