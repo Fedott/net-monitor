@@ -56,6 +56,8 @@ class MonitorCommand extends Command
         $this
             ->setName('monitor')
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL)
+            ->addOption('whois', 'w', InputOption::VALUE_NONE)
+            ->addOption('ping', 'p', InputOption::VALUE_NONE)
         ;
     }
 
@@ -65,23 +67,46 @@ class MonitorCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $limit = $input->getOption('limit');
+        $whois = $input->getOption('whois');
+        $ping  = $input->getOption('ping');
 
         $connections = $this->routerCommandService->getConnections();
+
+        $this->connectionsAnalyzer->setIsNeedPing($ping);
+        $this->connectionsAnalyzer->setIsNeedWhois($whois);
+        if (null !== $limit) {
+            $this->connectionsAnalyzer->setLimitFrequency($limit);
+        }
 
         $connections = $this->connectionsAnalyzer->analyze($connections);
 
         $table = new Table($output);
-        $table->setHeaders(['destination', 'frequency']);
+        $headers = [
+            'destination',
+            'frequency',
+        ];
+
+        if ($ping) {
+            $headers[] = 'latency';
+        }
+
+        if ($whois) {
+            $headers[] = 'whois';
+        }
+
+        $table->setHeaders($headers);
 
         foreach ($connections as $connection) {
-            if (null !== $limit && $connection->getFrequency() > $limit) {
-                continue;
-            }
-
-            $table->addRow([
+            $row = [
                 $connection->getDestination(),
                 $connection->getFrequency(),
-            ]);
+            ];
+
+            if ($ping) {
+                $row[] = $connection->getLatency();
+            }
+
+            $table->addRow($row);
         }
 
         $table->render();

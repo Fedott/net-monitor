@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "10c0f6d2e239880c39d02fa797aff135",
-    "content-hash": "6ff8106b4799634dce8808bb7c933ffb",
+    "hash": "dfea8e98fdda81cabe5a08f2bcc943ad",
+    "content-hash": "06c19baac4dafb6d0a826e128aa9c75d",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -155,6 +155,39 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "geerlingguy/ping",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geerlingguy/Ping.git",
+                "reference": "f67ff9483be1977cde38e10f79c5ead2f96149c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geerlingguy/Ping/zipball/f67ff9483be1977cde38e10f79c5ead2f96149c0",
+                "reference": "f67ff9483be1977cde38e10f79c5ead2f96149c0",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "JJG/Ping.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeff Geerling",
+                    "email": "jeff@jeffgeerling.com"
+                }
+            ],
+            "description": "A PHP class to ping hosts.",
+            "time": "2015-06-05 15:15:27"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -326,6 +359,54 @@
                 "uri"
             ],
             "time": "2016-01-23 01:23:02"
+        },
+        {
+            "name": "maastermedia/phpwhois",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maastermedia/phpwhois.git",
+                "reference": "2e1e76f5049b7d1786e50ff3fe4308f831d46cd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maastermedia/phpwhois/zipball/2e1e76f5049b7d1786e50ff3fe4308f831d46cd8",
+                "reference": "2e1e76f5049b7d1786e50ff3fe4308f831d46cd8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PhpWhois": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Kokot",
+                    "email": "peterkokot@gmail.com"
+                }
+            ],
+            "description": "Whois for PHP",
+            "homepage": "https://github.com/maastermedia/phpwhois",
+            "keywords": [
+                "whois"
+            ],
+            "time": "2015-04-10 20:32:13"
         },
         {
             "name": "php-di/invoker",
@@ -1778,7 +1859,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "maastermedia/phpwhois": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

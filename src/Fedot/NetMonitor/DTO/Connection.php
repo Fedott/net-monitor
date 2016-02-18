@@ -56,6 +56,11 @@ class Connection
     protected $frequency;
 
     /**
+     * @var int
+     */
+    protected $latency;
+
+    /**
      * @return string
      */
     public function getProtocol()
@@ -251,6 +256,26 @@ class Connection
     public function setFrequency(int $frequency)
     {
         $this->frequency = $frequency;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLatency()
+    {
+        return $this->latency;
+    }
+
+    /**
+     * @param int $latency
+     *
+     * @return $this
+     */
+    public function setLatency(int $latency)
+    {
+        $this->latency = $latency;
 
         return $this;
     }
