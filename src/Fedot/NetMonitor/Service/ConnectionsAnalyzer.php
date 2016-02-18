@@ -11,6 +11,7 @@ use Predis\Client;
 
 class ConnectionsAnalyzer
 {
+    protected $redisKeyPrefix = 'connections:analyzer';
     /**
      * @var Client
      */
@@ -199,7 +200,7 @@ class ConnectionsAnalyzer
      */
     protected function incrementFrequencyForIp(string $ip) : int
     {
-        $redisKeyPrefix = 'connections:analyzer:frequency:-ip';
+        $redisKeyPrefix = $this->redisKeyPrefix . ':frequency:ip';
 
         $key = "{$redisKeyPrefix}:$ip";
 
@@ -233,9 +234,7 @@ class ConnectionsAnalyzer
 
         foreach ($connections as $connection) {
             if ($this->isNeedPing) {
-                $ping = new Ping($connection->getDestination(), 150);
-                $latency = $ping->ping();
-                $connection->setLatency((int) $latency);
+                $this->updateLatency($connection);
             }
 
             if ($this->isNeedWhois) {
@@ -259,5 +258,29 @@ class ConnectionsAnalyzer
         return array_filter($connections, function (Connection $element) use ($limit) {
             return $element->getFrequency() < $limit;
         });
+    }
+
+    /**
+     * @param Connection $connection
+     *
+     * @return Connection
+     */
+    public function updateLatency(Connection $connection) : Connection
+    {
+        $skipLatencyForIpKey = "{$this->redisKeyPrefix}:skipped:{$connection->getDestination()}";
+
+        if (!$this->redisClient->get($skipLatencyForIpKey)) {
+            $ping = new Ping($connection->getDestination(), 150);
+            $latency = $ping->ping();
+            $connection->setLatency((int)$latency);
+
+            if ($connection->getLatency() === 0) {
+                $this->redisClient->set($skipLatencyForIpKey, 1, null, 1000);
+            }
+        } else {
+            $connection->setLatency(0);
+        }
+
+        return $connection;
     }
 }

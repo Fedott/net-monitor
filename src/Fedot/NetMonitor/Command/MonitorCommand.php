@@ -58,6 +58,7 @@ class MonitorCommand extends Command
             ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL)
             ->addOption('whois', 'w', InputOption::VALUE_NONE)
             ->addOption('ping', 'p', InputOption::VALUE_NONE)
+            ->addOption('periodic-ping', 'd', InputOption::VALUE_NONE)
         ;
     }
 
@@ -110,5 +111,20 @@ class MonitorCommand extends Command
         }
 
         $table->render();
+
+        if ($input->getOption('periodic-ping') && isset($connection)) {
+            $i = 1;
+            while (1) {
+
+                if ($i % 10 == 0) {
+                    $output->write("\x0D");
+                }
+
+                $output->write($this->connectionsAnalyzer->updateLatency($connection)->getLatency() . " ");
+                $i++;
+//                $output->write($i++ . " ");
+                usleep(100000);
+            }
+        }
     }
 }
