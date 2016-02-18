@@ -57,6 +57,7 @@ class ConnectionsAnalyzer
             [ip2long('23.32.0.0'), ip2long('23.67.255.255')],
             [ip2long('104.75.48.0'), ip2long('104.75.63.255')],
             [ip2long('23.192.0.0'), ip2long('23.223.255.255')],
+            [ip2long('23.72.0.0'), ip2long('23.79.255.255')],
         ];
     }
 
