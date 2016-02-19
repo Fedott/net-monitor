@@ -5,7 +5,9 @@ namespace Fedot\NetMonitor\Command;
 
 use DI\Annotation\Inject;
 use Fedot\NetMonitor\Service\PingService;
+use Fedot\NetMonitor\Service\ServerApplication;
 use Fedot\NetMonitor\Service\WebSocketServer;
+use Ratchet\App;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
@@ -74,12 +76,10 @@ class ServerCommand extends Command
 
         $this->pingService->setWebSocketServer($messenger);
 
-        $wsServer = new WsServer($messenger);
-        $httpServer = new HttpServer($wsServer);
-        $socketServer = new Server($this->eventLoop);
-        $ioServer = new IoServer($httpServer, $socketServer, $this->eventLoop);
+        $app = new ServerApplication($this->eventLoop);
 
-        $socketServer->listen(1788);
+        $app->route('/', new \Fedot\NetMonitor\Service\HttpServer());
+        $app->route('/ping', $messenger);
 
         $this->eventLoop->run();
 
