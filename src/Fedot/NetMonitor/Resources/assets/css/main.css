@@ -1,3 +1,12 @@
 h1 {
     color: red;
 }
+
+#chart {
+    height: 200px;
+    width: 600px;
+}
+
+.ip-list {
+    max-width: 300px;
+}

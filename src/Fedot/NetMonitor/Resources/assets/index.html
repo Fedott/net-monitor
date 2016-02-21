@@ -4,10 +4,53 @@
     <meta charset="UTF-8">
     <title>Net Monitor</title>
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/css/material.css">
+    <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+
     <link href="/css/main.css" type="text/css" rel="stylesheet" />
+    <script type="application/javascript" src="/js/canvasjs.min.js"></script>
     <script type="application/javascript" src="/js/main.js"></script>
 </head>
 <body>
-<h1>Net Monitor</h1>
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--4-col">
+        <ul class="mdl-list ip-list">
+            <li class="mdl-list__item">
+                <label class="mdl-list__item-primary-content" for="checkbox-1">
+                    127.0.0.1
+                </label>
+                <span class="mdl-list__item-secondary-action">
+                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+                        <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked />
+                    </label>
+                </span>
+            </li>
+            <li class="mdl-list__item">
+                <label class="mdl-list__item-primary-content" for="checkbox-1">
+                    127.0.0.1
+                </label>
+                <span class="mdl-list__item-secondary-action">
+                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+                        <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked />
+                    </label>
+                </span>
+            </li>
+            <li class="mdl-list__item">
+                <label class="mdl-list__item-primary-content" for="checkbox-1">
+                    127.0.0.1
+                </label>
+                <span class="mdl-list__item-secondary-action">
+                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1">
+                        <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input" checked />
+                    </label>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="mdl-cell mdl-cell--8-col">
+        <div id="chart"></div>
+    </div>
+</div>
 </body>
 </html>

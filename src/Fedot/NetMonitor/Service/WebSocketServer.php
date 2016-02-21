@@ -47,6 +47,7 @@ class WebSocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
+        echo "connection \n";
         $this->connections->detach($conn);
     }
 
