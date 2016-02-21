@@ -3,9 +3,9 @@
 namespace Fedot\NetMonitor\Service;
 
 use Guzzle\Http\Message\RequestInterface;
-use GuzzleHttp\Psr7\Response;
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class HttpServer implements HttpServerInterface
 {
@@ -43,20 +43,21 @@ class HttpServer implements HttpServerInterface
      */
     public function onOpen(ConnectionInterface $conn, RequestInterface $request = null)
     {
-        var_dump($request);
-        $response = new Response(
-            200,
-            [],
-            "<h1>Hello, world!</h1>"
-        );
+        $path = $request->getPath();
+        if ($path === '/') {
+            $path = '/index.html';
+        }
 
-        $responseString = implode("\n", $response->getHeaders());
+        $fullPath = __DIR__ . '/../Resources/assets' . $path;
 
-        $responseString .= "\n\n";
+        if (!file_exists($fullPath)) {
+            $response = new Response('', 404);
+        } else {
+            $response = new Response(file_get_contents($fullPath), 200);
+        }
 
-        $responseString.= "<h1>Hello, world!</h1>";
-
-        $conn->send($responseString);
+        $conn->send($response);
+        $conn->close();
     }
 
     /**

@@ -80,6 +80,7 @@ class ServerCommand extends Command
 
         $app->route('/', new \Fedot\NetMonitor\Service\HttpServer());
         $app->route('/ping', $messenger);
+        $app->route('/{path}/{file}', new \Fedot\NetMonitor\Service\HttpServer());
 
         $this->eventLoop->run();
 
