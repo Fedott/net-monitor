@@ -20,6 +20,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ServerCommand extends Command
 {
     /**
+     * @var WebSocketServer
+     */
+    protected $messenger;
+
+    /**
      * @var PingService
      */
     protected $pingService;
@@ -57,6 +62,20 @@ class ServerCommand extends Command
         return $this;
     }
 
+    /**
+     * @Inject
+     *
+     * @param WebSocketServer $messenger
+     *
+     * @return $this
+     */
+    public function setMessenger(WebSocketServer $messenger)
+    {
+        $this->messenger = $messenger;
+
+        return $this;
+    }
+
     protected function configure()
     {
         $this
@@ -70,16 +89,14 @@ class ServerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Start server");
+        $this->messenger->setPingService($this->pingService);
 
-        $messenger = new WebSocketServer();
-        $messenger->setPingService($this->pingService);
-
-        $this->pingService->setWebSocketServer($messenger);
+        $this->pingService->setWebSocketServer($this->messenger);
 
         $app = new ServerApplication($this->eventLoop);
 
         $app->route('/', new \Fedot\NetMonitor\Service\HttpServer());
-        $app->route('/ping', $messenger);
+        $app->route('/ping', $this->messenger);
         $app->route('/{path}/{file}', new \Fedot\NetMonitor\Service\HttpServer());
 
         $this->eventLoop->run();

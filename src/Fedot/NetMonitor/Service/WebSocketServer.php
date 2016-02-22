@@ -2,6 +2,7 @@
 
 namespace Fedot\NetMonitor\Service;
 
+use DI\Annotation\Inject;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
@@ -16,6 +17,44 @@ class WebSocketServer implements MessageComponentInterface
      * @var PingService
      */
     protected $pingService;
+
+    /**
+     * @var RouterCommandService
+     */
+    protected $routerService;
+
+    /**
+     * @var ConnectionsAnalyzer
+     */
+    protected $connectionAnalyzer;
+
+    /**
+     * @Inject
+     *
+     * @param ConnectionsAnalyzer $connectionAnalyzer
+     *
+     * @return $this
+     */
+    public function setConnectionAnalyzer(ConnectionsAnalyzer $connectionAnalyzer)
+    {
+        $this->connectionAnalyzer = $connectionAnalyzer;
+
+        return $this;
+    }
+
+    /**
+     * @Inject
+     *
+     * @param RouterCommandService $routerService
+     *
+     * @return $this
+     */
+    public function setRouterService(RouterCommandService $routerService)
+    {
+        $this->routerService = $routerService;
+
+        return $this;
+    }
 
     /**
      * @param PingService $pingService
@@ -76,6 +115,22 @@ class WebSocketServer implements MessageComponentInterface
             if ($command == 'stop-ping') {
                 $ip = $message['ip'];
                 $this->pingService->stopPing($ip);
+            }
+            if ($command == 'getIps') {
+                $connections = $this->routerService->getConnections();
+//                $connections = $this->connectionAnalyzer->filter($connections);
+                $response = [
+                    'id' => $message['id'],
+                ];
+
+                $connectionIps = [];
+                foreach ($connections as $connection) {
+                    $connectionIps[] = $connection->getDestination();
+                }
+
+                $response['ips'] = $connectionIps;
+
+                $from->send(json_encode($response));
             }
         }
     }

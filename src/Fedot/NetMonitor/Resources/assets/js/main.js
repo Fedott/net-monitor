@@ -5,15 +5,18 @@ var socket = new WebSocket("ws://localhost:1788/ping");
 var data = [];
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    var chart = new CanvasJS.Chart("chart",{
-        title :{
-            text: "Net Monitor"
-        },
-        data: [{
-            type: "line",
-            dataPoints: data
-        }]
-    });
+    document.getElementById('refresh-ips').onclick = function () {
+        var request = WsRequestFactory.getNewRequest();
+        request.command = "getIps";
 
-    chart.render();
+        socket.send(JSON.stringify(request));
+        var eventListener = function (event) {
+            var data = JSON.parse(event.data);
+            if (data.id == request.id) {
+                console.log(data);
+                event.target.removeEventListener('message', eventListener);
+            }
+        };
+        socket.addEventListener('message', eventListener)
+    };
 });
