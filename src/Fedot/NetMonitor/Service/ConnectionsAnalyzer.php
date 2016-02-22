@@ -58,6 +58,12 @@ class ConnectionsAnalyzer
             [ip2long('104.75.48.0'), ip2long('104.75.63.255')],
             [ip2long('23.192.0.0'), ip2long('23.223.255.255')],
             [ip2long('23.72.0.0'), ip2long('23.79.255.255')],
+            [ip2long('2.21.192.0'), ip2long('2.21.207.255')],
+            [ip2long('198.106.0.0'), ip2long('198.107.255.255')],
+            [ip2long('2.22.0.0'), ip2long('2.22.3.255')],
+            [ip2long('31.13.72.0'), ip2long('31.13.72.255')],
+            [ip2long('50.16.0.0'), ip2long('50.19.255.255')],
+            [ip2long('52.84.0.0'), ip2long('52.95.255.255')],
         ];
     }
 
@@ -276,7 +282,8 @@ class ConnectionsAnalyzer
             $connection->setLatency((int)$latency);
 
             if ($connection->getLatency() === 0) {
-                $this->redisClient->set($skipLatencyForIpKey, 1, null, 1000);
+                $this->redisClient->set($skipLatencyForIpKey, 1);
+                $this->redisClient->expire($skipLatencyForIpKey, 1000);
             }
         } else {
             $connection->setLatency(0);
