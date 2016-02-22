@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'router.ip'       => '',
+    'router.login'    => '',
+    'router.password' => '',
+
+    'console.ip'      => '',
+];
