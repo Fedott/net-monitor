@@ -1,0 +1,23 @@
+{
+  "name": "net-monitor",
+  "version": "0.0.1",
+  "description": "Net monitor for latency",
+  "main": "index.js",
+  "dependencies": {
+    "mdl": "^0.1.1",
+    "react": "^0.14.7",
+    "typescript": "^1.8.2"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^2.12.0",
+    "typings": "^0.6.8",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fedot <fedotru@gmail.com>",
+  "license": "MIT"
+}
