@@ -9,6 +9,12 @@ var gulp       = require('gulp'),
 
 var project = ts.createProject('src/tsconfig.json', {typescript: typescript});
 
+gulp.task('through', function () {
+    return gulp
+        .src(['src/index.html'])
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('compile', function () {
     var result = gulp
         .src('src/**/*{ts,tsx}')
@@ -16,15 +22,9 @@ gulp.task('compile', function () {
     return result.js.pipe(gulp.dest('.tmp'));
 });
 
-gulp.task('bundle', function () {
+gulp.task('bundle', ['through','compile'], function () {
     var bundle = browserify('.tmp/bootstrap.js');
     return bundle.bundle()
         .pipe(source('bundle.js'))
-        .pipe(gulp.dest('dist'));
-});
-
-gulp.task('through', function () {
-    return gulp
-        .src(['src/index.html'])
         .pipe(gulp.dest('dist'));
 });
