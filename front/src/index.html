@@ -5,56 +5,20 @@
     <title>Net Monitor</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="/web/css/material.css">
+    <link rel="stylesheet" href="/css/material.css">
     <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
 
-    <link href="/web/css/main.css" type="text/css" rel="stylesheet" />
-    <script type="application/javascript" src="/web/js/library.js"></script>
-    <script type="application/javascript" src="/web/js/main.js"></script>
+    <link href="/css/main.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--4-col">
-        <a class="mdl-button" id="refresh-ips">Обновить</a>
-        <ul class="mdl-list ip-list">
-            <li class="mdl-list__item">
-                <div class="mdl-list__item-primary-content">
-                    127.0.0.1
-                </div>
-                <span class="mdl-list__item-secondary-action">
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="checkbox-1">
-                        <input type="checkbox" id="checkbox-1" class="mdl-switch__input" />
-                        <span class="mdl-switch__label"></span>
-                    </label>
-                </span>
-            </li>
-            <li class="mdl-list__item">
-                <div class="mdl-list__item-primary-content">
-                    127.0.0.1
-                </div>
-                <span class="mdl-list__item-secondary-action">
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="checkbox-2">
-                        <input type="checkbox" id="checkbox-2" class="mdl-switch__input" />
-                        <span class="mdl-switch__label"></span>
-                    </label>
-                </span>
-            </li>
-            <li class="mdl-list__item">
-                <div class="mdl-list__item-primary-content">
-                    127.0.0.1
-                </div>
-                <span class="mdl-list__item-secondary-action">
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="checkbox-3">
-                        <input type="checkbox" id="checkbox-3" class="mdl-switch__input" />
-                        <span class="mdl-switch__label"></span>
-                    </label>
-                </span>
-            </li>
-        </ul>
+    <div class="mdl-cell mdl-cell--4-col" id="ip-list">
+
     </div>
     <div class="mdl-cell mdl-cell--8-col">
         <div id="chart"></div>
     </div>
+    <script src="bundle.js"></script>
 </div>
 </body>
 </html>

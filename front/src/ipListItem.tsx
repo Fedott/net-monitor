@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-interface Ip {
+export interface Ip {
     ip: string;
 }
 
@@ -10,7 +10,7 @@ export interface IpItemState {}
 
 export interface IpItemProps {
     item: Ip;
-    ping: boolean;
+    ping?: boolean;
 }
 
 export class IpListItem extends React.Component<IpItemProps, IpItemState> {

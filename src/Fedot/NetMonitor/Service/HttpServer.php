@@ -48,8 +48,9 @@ class HttpServer implements HttpServerInterface
             $path = '/index.html';
         }
 
-        $fullPath = __DIR__ . '/../Resources/assets' . $path;
+        $fullPath = __DIR__ . '/../../../../front/dist' . $path;
 
+        echo $fullPath . "\n";
         if (!file_exists($fullPath)) {
             $response = new Response('', 404);
         } else {

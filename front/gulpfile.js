@@ -15,6 +15,12 @@ gulp.task('through', function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('css', function () {
+    return gulp
+        .src(['src/css/*.css'])
+        .pipe(gulp.dest('dist/css'));
+});
+
 gulp.task('compile', function () {
     var result = gulp
         .src('src/**/*{ts,tsx}')
@@ -22,7 +28,7 @@ gulp.task('compile', function () {
     return result.js.pipe(gulp.dest('.tmp'));
 });
 
-gulp.task('bundle', ['through','compile'], function () {
+gulp.task('bundle', ['through', 'css', 'compile'], function () {
     var bundle = browserify('.tmp/bootstrap.js');
     return bundle.bundle()
         .pipe(source('bundle.js'))
