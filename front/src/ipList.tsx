@@ -32,7 +32,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
     updateCallback(response: Response) {
         var oldList = this.state.ipList;
         var newList: {[id:string]: Ip} = {};
-        response.data.ips.forEach(function (ipText:string) {
+        response.result.ips.forEach(function (ipText:string) {
             if (null == oldList[ipText]) {
                 newList[ipText] = {ip: ipText};
             } else {

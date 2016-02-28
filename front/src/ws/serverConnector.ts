@@ -6,7 +6,7 @@ export class Request {
 }
 
 export class Response {
-    data;
+    result;
 }
 
 class RequestFactoryClass {
@@ -47,7 +47,7 @@ class WsConnectorClass {
         var requestId = data.id;
         if (null !== this.requests[requestId]) {
             var response = new Response();
-            response.data = data;
+            response.result = data.result;
             this.requests[requestId].resultFunction(response);
         }
     }

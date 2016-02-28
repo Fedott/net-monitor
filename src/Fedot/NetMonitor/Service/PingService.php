@@ -126,7 +126,7 @@ class PingService
     protected function sendToAll(array $result)
     {
         $response = new Response();
-        $response->setBody($result);
+        $response->setResult($result);
 
         $responseJson = json_encode($response);
 

@@ -57,14 +57,14 @@ class IpsListHanlder extends AbstractRequestHandler
         
         $response->setRequestId($request->getId());
 
-        $body = [
+        $result = [
             'ips' => [],
         ];
         foreach ($connections as $connection) {
-            $body['ips'][] = $connection->getDestination();
+            $result['ips'][] = $connection->getDestination();
         }
         
-        $response->setBody($body);
+        $response->setResult($result);
 
         $request->getTargetConnection()->send(json_encode($response));
     }

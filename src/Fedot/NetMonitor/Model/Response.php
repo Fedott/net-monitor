@@ -15,7 +15,7 @@ class Response implements JsonSerializable
     /**
      * @var array
      */
-    protected $body;
+    protected $result;
 
     /**
      * @return int
@@ -40,19 +40,19 @@ class Response implements JsonSerializable
     /**
      * @return array
      */
-    public function getBody()
+    public function getResult()
     {
-        return $this->body;
+        return $this->result;
     }
 
     /**
-     * @param array $body
+     * @param array $result
      *
      * @return $this
      */
-    public function setBody(array $body)
+    public function setResult(array $result)
     {
-        $this->body = $body;
+        $this->result = $result;
 
         return $this;
     }
@@ -64,6 +64,7 @@ class Response implements JsonSerializable
     {
         return [
             'id' => $this->getRequestId(),
-        ] + $this->getBody();
+            'result' => $this->getResult(),
+        ];
     }
 }
