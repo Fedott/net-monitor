@@ -38,13 +38,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
 
         this.setState({ipList: ipList});
 
-        this.updateMDL();
     }
-
-    protected updateMDL() {
-        var w:any = window;
-        w.componentHandler.upgradeAllRegistered();
-    };
 
     render() {
         var i = 0;
