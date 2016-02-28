@@ -11,8 +11,7 @@ use Ratchet\Http\HttpServerInterface;
 use Ratchet\Http\OriginCheck;
 use Ratchet\Wamp\WampServerInterface;
 use Ratchet\Server\IoServer;
-use Ratchet\Server\FlashPolicy;
-use Ratchet\Http\HttpServer;
+use Ratchet\Http\HttpServer as BaseHttpServer;
 use Ratchet\Http\Router;
 use Ratchet\WebSocket\WsServer;
 use Ratchet\Wamp\WampServer;
@@ -85,7 +84,7 @@ class ServerApplication
         $socket->listen($port, $address);
 
         $this->routes = new RouteCollection;
-        $this->server = new IoServer(new HttpServer(new Router(new UrlMatcher($this->routes, new RequestContext))), $socket, $loop);
+        $this->server = new IoServer(new BaseHttpServer(new Router(new UrlMatcher($this->routes, new RequestContext))), $socket, $loop);
     }
 
     /**

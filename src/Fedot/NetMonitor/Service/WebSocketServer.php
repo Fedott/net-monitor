@@ -3,6 +3,7 @@
 namespace Fedot\NetMonitor\Service;
 
 use DI\Annotation\Inject;
+use Fedot\NetMonitor\Model\Request;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
@@ -14,56 +15,20 @@ class WebSocketServer implements MessageComponentInterface
     protected $connections;
 
     /**
-     * @var PingService
+     * @var RequestManager
      */
-    protected $pingService;
-
-    /**
-     * @var RouterCommandService
-     */
-    protected $routerService;
-
-    /**
-     * @var ConnectionsAnalyzer
-     */
-    protected $connectionAnalyzer;
+    protected $requestManager;
 
     /**
      * @Inject
      *
-     * @param ConnectionsAnalyzer $connectionAnalyzer
+     * @param RequestManager $requestManager
      *
      * @return $this
      */
-    public function setConnectionAnalyzer(ConnectionsAnalyzer $connectionAnalyzer)
+    public function setRequestManager(RequestManager $requestManager)
     {
-        $this->connectionAnalyzer = $connectionAnalyzer;
-
-        return $this;
-    }
-
-    /**
-     * @Inject
-     *
-     * @param RouterCommandService $routerService
-     *
-     * @return $this
-     */
-    public function setRouterService(RouterCommandService $routerService)
-    {
-        $this->routerService = $routerService;
-
-        return $this;
-    }
-
-    /**
-     * @param PingService $pingService
-     *
-     * @return $this
-     */
-    public function setPingService(PingService $pingService)
-    {
-        $this->pingService = $pingService;
+        $this->requestManager = $requestManager;
 
         return $this;
     }
@@ -78,7 +43,6 @@ class WebSocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "connection open \n";
         $this->connections->attach($conn);
     }
 
@@ -87,7 +51,6 @@ class WebSocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        echo "connection close \n";
         $this->connections->detach($conn);
     }
 
@@ -107,33 +70,17 @@ class WebSocketServer implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $message = json_decode($msg, true);
-        if (isset($message['command'])) {
-            $command = $message['command'];
-            if ($command == 'start-ping') {
-                $ip = $message['ip'];
-                $this->pingService->startPing($ip);
-            }
-            if ($command == 'stop-ping') {
-                $ip = $message['ip'];
-                $this->pingService->stopPing($ip);
-            }
-            if ($command == 'getIps') {
-                $connections = $this->routerService->getConnections();
-//                $connections = $this->connectionAnalyzer->filter($connections);
-                $response = [
-                    'id' => $message['id'],
-                ];
+        $request = new Request();
+        $request->setId($message['id'])
+            ->setCommand($message['command'])
+            ->setTargetConnection($from)
+        ;
 
-                $connectionIps = [];
-                foreach ($connections as $connection) {
-                    $connectionIps[] = $connection->getDestination();
-                }
-
-                $response['ips'] = $connectionIps;
-
-                $from->send(json_encode($response));
-            }
+        if (array_key_exists('params', $message)) {
+            $request->setParams($message['params']);
         }
+
+        $this->requestManager->handle($request);
     }
 
     /**

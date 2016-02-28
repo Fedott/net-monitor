@@ -4,15 +4,10 @@ namespace Fedot\NetMonitor\Command;
 
 
 use DI\Annotation\Inject;
-use Fedot\NetMonitor\Service\PingService;
+use Fedot\NetMonitor\Service\HttpServer;
 use Fedot\NetMonitor\Service\ServerApplication;
 use Fedot\NetMonitor\Service\WebSocketServer;
-use Ratchet\App;
-use Ratchet\Http\HttpServer;
-use Ratchet\Server\IoServer;
-use Ratchet\WebSocket\WsServer;
 use React\EventLoop\LoopInterface;
-use React\Socket\Server;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,9 +20,9 @@ class ServerCommand extends Command
     protected $messenger;
 
     /**
-     * @var PingService
+     * @var HttpServer
      */
-    protected $pingService;
+    protected $httpServer;
 
     /**
      * @var LoopInterface
@@ -51,13 +46,13 @@ class ServerCommand extends Command
     /**
      * @Inject
      *
-     * @param PingService $pingService
+     * @param HttpServer $httpServer
      *
      * @return $this
      */
-    public function setPingService(PingService $pingService)
+    public function setHttpServer(HttpServer $httpServer)
     {
-        $this->pingService = $pingService;
+        $this->httpServer = $httpServer;
 
         return $this;
     }
@@ -89,16 +84,13 @@ class ServerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Start server");
-        $this->messenger->setPingService($this->pingService);
-
-        $this->pingService->setWebSocketServer($this->messenger);
 
         $app = new ServerApplication($this->eventLoop);
 
-        $app->route('/', new \Fedot\NetMonitor\Service\HttpServer());
+        $app->route('/', $this->httpServer);
         $app->route('/ping', $this->messenger);
-        $app->route('/{path}/{file}', new \Fedot\NetMonitor\Service\HttpServer());
-        $app->route('/{file}', new \Fedot\NetMonitor\Service\HttpServer());
+        $app->route('/{path}/{file}', $this->httpServer);
+        $app->route('/{file}', $this->httpServer);
 
         $this->eventLoop->run();
 

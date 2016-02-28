@@ -5,6 +5,7 @@ use function \DI\get;
 use function \DI\object;
 use Fedot\NetMonitor\Command\MonitorCommand;
 use Fedot\NetMonitor\Command\ServerCommand;
+use Fedot\NetMonitor\Service\Handler\IpsListHanlder;
 
 return [
     'console.commands' => add([
@@ -14,5 +15,7 @@ return [
     \Symfony\Component\Console\Application::class => object()
         ->method('addCommands', get('console.commands')),
     \React\EventLoop\LoopInterface::class => \DI\factory([React\EventLoop\Factory::class, 'create']),
-
+    'request-manager.handlers' => add([
+        get(IpsListHanlder::class),
+    ]),
 ];
