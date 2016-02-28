@@ -4,6 +4,8 @@ import * as React from 'react';
 import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
+import {List} from 'react-mdl';
+
 export interface IpListState {
     ipList?: Ip[];
 }
@@ -55,7 +57,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
         return (
             <div>
                 <a className="mdl-button" id="refresh-ips" onClick={this.reloadList.bind(this)} >Обновить</a>
-                <ul className="mdl-list ip-list">{IpItems}</ul>
+                <List>{IpItems}</List>
             </div>
         );
     }

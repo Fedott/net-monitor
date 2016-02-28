@@ -1,6 +1,8 @@
 /// <reference path="../typings/browser/ambient/react/react.d.ts" />
+/// <reference path="../typings/react-mdl.d.ts" />
 
 import * as React from 'react'
+import {ListItem, ListItemContent, ListItemAction, Switch} from 'react-mdl'
 
 export interface Ip {
     ip: string;
@@ -20,17 +22,12 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
 
     render() {
         return (
-            <li className="mdl-list__item">
-                <div className="mdl-list__item-primary-content">
-                    {this.props.item.ip}
-                </div>
-                <span className="mdl-list__item-secondary-action">
-                    <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect">
-                        <input type="checkbox" className="mdl-switch__input"/>
-                        <span className="mdl-switch__label"/>
-                    </label>
-                </span>
-            </li>
+            <ListItem>
+                <ListItemContent>{this.props.item.ip}</ListItemContent>
+                <ListItemAction>
+                    <Switch />
+                </ListItemAction>
+            </ListItem>
         );
     }
 }
