@@ -22,8 +22,6 @@ export class IpList extends React.Component<IpListPops, IpListState> {
     }
 
     reloadList(event) {
-        console.log('reload');
-
         var request:Request = RequestFactory.createRequest();
         request.command = 'getIps';
         request.resultFunction = this.updateCallback.bind(this);
@@ -49,11 +47,9 @@ export class IpList extends React.Component<IpListPops, IpListState> {
     render() {
         var IpItems = [];
         for (var itemKey in this.state.ipList) {
-            var item = this.state.ipList[itemKey];
+            var item:Ip = this.state.ipList[itemKey];
             IpItems.push(<IpListItem item={item} key={item.ip} />);
         }
-
-        console.log(IpItems);
 
         return (
             <div>

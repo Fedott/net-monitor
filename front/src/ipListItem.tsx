@@ -6,26 +6,28 @@ import {ListItem, ListItemContent, ListItemAction, Switch} from 'react-mdl'
 
 export interface Ip {
     ip: string;
+    ping?: boolean;
 }
 
 export interface IpItemState {}
 
 export interface IpItemProps {
     item: Ip;
-    ping?: boolean;
 }
 
 export class IpListItem extends React.Component<IpItemProps, IpItemState> {
-    startPing() {
-        
+    togglePing() {
+        this.props.item.ping = !this.props.item.ping;
+
+        console.log(this.props.item);
     }
 
     render() {
         return (
             <ListItem>
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
-                <ListItemAction>
-                    <Switch />
+                <ListItemAction info="Ping">
+                    <Switch onChange={this.togglePing.bind(this)} />
                 </ListItemAction>
             </ListItem>
         );
