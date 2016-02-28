@@ -2,11 +2,13 @@
 
 namespace Fedot\NetMonitor\Service;
 
-
 use DI\Annotation\Inject;
+use Fedot\NetMonitor\Model\Response;
 use JJG\Ping;
+use Ratchet\ConnectionInterface;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\TimerInterface;
+use SplObjectStorage;
 
 class PingService
 {
@@ -14,6 +16,11 @@ class PingService
      * @var string[]
      */
     protected $ipForPing = [];
+
+    /**
+     * @var SplObjectStorage|ConnectionInterface[]
+     */
+    protected $connections;
 
     /**
      * @var bool
@@ -31,11 +38,6 @@ class PingService
     protected $eventLoop;
 
     /**
-     * @var WebSocketServer
-     */
-    protected $webSocketServer;
-
-    /**
      * @Inject
      *
      * @param LoopInterface $eventLoop
@@ -49,23 +51,19 @@ class PingService
         return $this;
     }
 
-    /**
-     * @param WebSocketServer $webSocketServer
-     *
-     * @return $this
-     */
-    public function setWebSocketServer(WebSocketServer $webSocketServer)
+    public function __construct()
     {
-        $this->webSocketServer = $webSocketServer;
-
-        return $this;
+        $this->connections = new SplObjectStorage();
     }
 
     /**
-     * @param string $ip
+     * @param string              $ip
+     * @param ConnectionInterface $connection
      */
-    public function startPing(string $ip)
+    public function startPing(string $ip, ConnectionInterface $connection)
     {
+        $this->connections->attach($connection);
+
         if (!isset($this->ipForPing[$ip])) {
             $this->ipForPing[$ip] = $ip;
         }
@@ -99,7 +97,7 @@ class PingService
             $result[$ip] = $latency;
         }
 
-        $this->webSocketServer->sendToAll($result);
+        $this->sendToAll($result);
     }
 
     public function startPingLoop()
@@ -116,7 +114,24 @@ class PingService
         if ($this->isPingStarted) {
             $this->isPingStarted = false;
 
+            $this->connections->removeAll($this->connections);
+
             $this->eventLoop->cancelTimer($this->pingTimer);
+        }
+    }
+
+    /**
+     * @param array $result
+     */
+    protected function sendToAll(array $result)
+    {
+        $response = new Response();
+        $response->setBody($result);
+
+        $responseJson = json_encode($response);
+
+        foreach ($this->connections as $connection) {
+            $connection->send($responseJson);
         }
     }
 }

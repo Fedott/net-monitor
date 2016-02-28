@@ -6,6 +6,7 @@ use function \DI\object;
 use Fedot\NetMonitor\Command\MonitorCommand;
 use Fedot\NetMonitor\Command\ServerCommand;
 use Fedot\NetMonitor\Service\Handler\IpsListHanlder;
+use Fedot\NetMonitor\Service\Handler\PingHandler;
 
 return [
     'console.commands' => add([
@@ -17,5 +18,6 @@ return [
     \React\EventLoop\LoopInterface::class => \DI\factory([React\EventLoop\Factory::class, 'create']),
     'request-manager.handlers' => add([
         get(IpsListHanlder::class),
+        get(PingHandler::class),
     ]),
 ];
