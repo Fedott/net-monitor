@@ -1,7 +1,8 @@
 {
     "compilerOptions" : {
         "module": "umd",
-        "jsx": "react"
+        "jsx": "react",
+        "target": "ES6"
     }
 }
 

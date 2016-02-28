@@ -78,6 +78,7 @@ class WebSocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
+        echo "connection open \n";
         $this->connections->attach($conn);
     }
 
@@ -86,7 +87,7 @@ class WebSocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        echo "connection \n";
+        echo "connection close \n";
         $this->connections->detach($conn);
     }
 

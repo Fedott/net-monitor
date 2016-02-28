@@ -14,14 +14,8 @@ export interface IpItemProps {
 }
 
 export class IpListItem extends React.Component<IpItemProps, IpItemState> {
-    constructor() {
-        super();
-        
-        this.startPing.bind(this);
-    }
-
     startPing() {
-
+        
     }
 
     render() {

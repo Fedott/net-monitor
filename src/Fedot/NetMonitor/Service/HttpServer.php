@@ -50,7 +50,6 @@ class HttpServer implements HttpServerInterface
 
         $fullPath = __DIR__ . '/../../../../front/dist' . $path;
 
-        echo $fullPath . "\n";
         if (!file_exists($fullPath)) {
             $response = new Response('', 404);
         } else {
