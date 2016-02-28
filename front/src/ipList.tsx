@@ -7,7 +7,7 @@ import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnect
 import {List} from 'react-mdl';
 
 export interface IpListState {
-    ipList?: Ip[];
+    ipList?: {[id:string]: Ip};
 }
 
 export interface IpListPops {}
@@ -18,7 +18,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
     constructor(props:IpListPops, context:any) {
         super(props, context);
 
-        this.state = {ipList: []};
+        this.state = {ipList: {}};
     }
 
     reloadList(event) {
@@ -32,19 +32,26 @@ export class IpList extends React.Component<IpListPops, IpListState> {
     }
 
     updateCallback(response: Response) {
-        var ipList:Ip[] = response.data.ips.map(function (ipText:string) {
-            return {ip: ipText};
+        var oldList = this.state.ipList;
+        var newList: {[id:string]: Ip} = {};
+        response.data.ips.forEach(function (ipText:string) {
+            if (null == oldList[ipText]) {
+                newList[ipText] = {ip: ipText};
+            } else {
+                newList[ipText] = oldList[ipText];
+            }
         });
 
-        this.setState({ipList: ipList});
+        this.setState({ipList: newList});
 
     }
 
     render() {
-        var i = 0;
-        var IpItems = this.state.ipList.map(item => {
-            return <IpListItem item={item} key={i++} />
-        });
+        var IpItems = [];
+        for (var itemKey in this.state.ipList) {
+            var item = this.state.ipList[itemKey];
+            IpItems.push(<IpListItem item={item} key={item.ip} />);
+        }
 
         console.log(IpItems);
 
