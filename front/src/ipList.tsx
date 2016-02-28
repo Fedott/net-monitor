@@ -14,6 +14,7 @@ export interface IpListPops {}
 
 export class IpList extends React.Component<IpListPops, IpListState> {
     state: IpListState;
+    reloadListCycle: boolean = false;
 
     constructor(props:IpListPops, context:any) {
         super(props, context);
@@ -21,7 +22,17 @@ export class IpList extends React.Component<IpListPops, IpListState> {
         this.state = {ipList: {}};
     }
 
-    reloadList(event) {
+    toggleReloadList() {
+        this.reloadListCycle = !this.reloadListCycle;
+
+        this.reloadList();
+    }
+
+    reloadList() {
+        if (!this.reloadListCycle) {
+            return;
+        }
+
         var request:Request = RequestFactory.createRequest();
         request.command = 'getIps';
         request.resultFunction = this.updateCallback.bind(this);
@@ -42,6 +53,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
 
         this.setState({ipList: newList});
 
+        setTimeout(this.reloadList.bind(this), 1000);
     }
 
     render() {
@@ -53,7 +65,7 @@ export class IpList extends React.Component<IpListPops, IpListState> {
 
         return (
             <div>
-                <a className="mdl-button" id="refresh-ips" onClick={this.reloadList.bind(this)} >Обновить</a>
+                <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>Запустить/Остановить обновление</a>
                 <List>{IpItems}</List>
             </div>
         );

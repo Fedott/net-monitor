@@ -49,6 +49,8 @@ class WsConnectorClass {
             var response = new Response();
             response.result = data.result;
             this.requests[requestId].resultFunction(response);
+        } else if (null === requestId) {
+            
         }
     }
 }
