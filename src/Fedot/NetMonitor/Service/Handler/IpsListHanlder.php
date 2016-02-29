@@ -6,6 +6,7 @@ namespace Fedot\NetMonitor\Service\Handler;
 use DI\Annotation\Inject;
 use Fedot\NetMonitor\Model\Request;
 use Fedot\NetMonitor\Model\Response;
+use Fedot\NetMonitor\Service\ConnectionsAnalyzer;
 use Fedot\NetMonitor\Service\RouterCommandService;
 
 class IpsListHanlder extends AbstractRequestHandler
@@ -18,6 +19,11 @@ class IpsListHanlder extends AbstractRequestHandler
     protected $routerService;
 
     /**
+     * @var ConnectionsAnalyzer
+     */
+    protected $connectionsAnalyzer;
+
+    /**
      * @Inject
      * 
      * @param RouterCommandService $routerService
@@ -27,6 +33,20 @@ class IpsListHanlder extends AbstractRequestHandler
     public function setRouterService(RouterCommandService $routerService)
     {
         $this->routerService = $routerService;
+
+        return $this;
+    }
+
+    /**
+     * @Inject
+     *
+     * @param ConnectionsAnalyzer $connectionsAnalyzer
+     *
+     * @return $this
+     */
+    public function setConnectionsAnalyzer(ConnectionsAnalyzer $connectionsAnalyzer)
+    {
+        $this->connectionsAnalyzer = $connectionsAnalyzer;
 
         return $this;
     }
@@ -53,6 +73,7 @@ class IpsListHanlder extends AbstractRequestHandler
     public function handle(Request $request)
     {
         $connections = $this->routerService->getConnections();
+        $connections = $this->connectionsAnalyzer->filter($connections);
         $response = new Response();
         
         $response->setRequestId($request->getId());
