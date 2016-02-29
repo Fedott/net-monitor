@@ -2,6 +2,7 @@
 export class Request {
     id: number;
     command: string;
+    params;
     resultFunction: any;
 }
 
@@ -26,11 +27,13 @@ export var RequestFactory = RequestFactoryInstance;
 class WsConnectorClass {
     requests: {[id:number]: Request};
     wsConnection: WebSocket;
+    globalListeners: Function[];
 
     constructor() {
         this.wsConnection = new WebSocket('ws://localhost:1788/ping');
         this.wsConnection.addEventListener('message', this.parseResponse.bind(this));
         this.requests = {};
+        this.globalListeners = [];
     }
     
     sendRequest(request: Request) {
@@ -38,19 +41,24 @@ class WsConnectorClass {
         
         this.wsConnection.send(JSON.stringify({
             id: request.id,
-            command: request.command
+            command: request.command,
+            params: request.params,
         }));
     }
 
     parseResponse(event: MessageEvent) {
         var data = JSON.parse(event.data);
         var requestId = data.id;
-        if (null !== this.requests[requestId]) {
+        if (null != this.requests[requestId]) {
             var response = new Response();
             response.result = data.result;
-            this.requests[requestId].resultFunction(response);
+            if (null != this.requests[requestId].resultFunction) {
+                this.requests[requestId].resultFunction(response);
+            }
         } else if (null === requestId) {
-            
+            this.globalListeners.forEach((func) => {
+                func(data.result);
+            })
         }
     }
 }

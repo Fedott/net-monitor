@@ -94,7 +94,7 @@ class PingService
         foreach ($this->ipForPing as $ip) {
             $ping = new Ping($ip, 150);
             $latency = $ping->ping();
-            $result[$ip] = $latency;
+            $result[] = ['ip' => $ip, 'latency' => $latency];
         }
 
         $this->sendToAll($result);
@@ -105,7 +105,7 @@ class PingService
         if (!$this->isPingStarted) {
             $this->isPingStarted = true;
 
-            $this->pingTimer = $this->eventLoop->addPeriodicTimer(0.1, [$this, 'loopCallback']);
+            $this->pingTimer = $this->eventLoop->addPeriodicTimer(0.5, [$this, 'loopCallback']);
         }
     }
 
