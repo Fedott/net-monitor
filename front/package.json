@@ -6,6 +6,7 @@
   "dependencies": {
     "mdl": "^0.1.1",
     "react": "^0.14.7",
+    "react-d3": "^0.4.0",
     "react-dom": "^0.14.7",
     "react-mdl": "^1.4.2"
   },

@@ -1,6 +1,8 @@
 {
   "name": "net-monitor",
-  "dependencies": {},
+  "dependencies": {
+    "d3": "github:typed-typings/npm-d3#8bb38bb0ef0a48ac273f6045c26753260ea089df"
+  },
   "devDependencies": {},
   "ambientDependencies": {
     "react": "github:DefinitelyTyped/DefinitelyTyped/react/react.d.ts#f407264835650f5f38d4bb2c515a79e7a835916b",
