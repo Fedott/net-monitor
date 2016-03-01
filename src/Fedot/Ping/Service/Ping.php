@@ -33,6 +33,11 @@ class Ping
     protected $exitCallback;
 
     /**
+     * @var Process
+     */
+    protected $process;
+
+    /**
      * @param LoopInterface $eventLoop
      *
      * @return $this
@@ -128,14 +133,19 @@ class Ping
     {
         $command = $this->getCommand();
 
-        $process = new Process($command);
+        $this->process = new Process($command);
         
         if (null !== $this->exitCallback) {
-            $process->on('exit', $this->exitCallback);
+            $this->process->on('exit', $this->exitCallback);
         }
 
-        $process->start($this->eventLoop);
-        $process->stdout->on('data', [$this, 'parseOutput']);
+        $this->process->start($this->eventLoop);
+        $this->process->stdout->on('data', [$this, 'parseOutput']);
+    }
+
+    public function stop()
+    {
+        $this->process->terminate();
     }
 
     /**
