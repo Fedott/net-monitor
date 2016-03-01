@@ -23,6 +23,11 @@ class Ping
     protected $count;
 
     /**
+     * @var float
+     */
+    protected $interval;
+
+    /**
      * @var callable
      */
     protected $pingCallback;
@@ -90,6 +95,26 @@ class Ping
     }
 
     /**
+     * @return float
+     */
+    public function getInterval()
+    {
+        return $this->interval;
+    }
+
+    /**
+     * @param float $interval
+     *
+     * @return $this
+     */
+    public function setInterval(float $interval)
+    {
+        $this->interval = $interval;
+
+        return $this;
+    }
+
+    /**
      * @return callable
      */
     public function getPingCallback()
@@ -133,7 +158,7 @@ class Ping
     {
         $command = $this->getCommand();
 
-        $this->process = new Process($command);
+        $this->process = new Process($command, null, ['LC_ALL' => 'C']);
         
         if (null !== $this->exitCallback) {
             $this->process->on('exit', $this->exitCallback);
@@ -167,8 +192,10 @@ class Ping
 
         if (null !== $this->count) {
             $command .= " -c {$this->count}";
-
-            return $command;
+        }
+        
+        if (null !== $this->interval) {
+            $command .= " -i {$this->interval}";
         }
 
         return $command;

@@ -28,11 +28,6 @@ class PingService
     protected $isPingStarted = false;
 
     /**
-     * @var TimerInterface
-     */
-    protected $pingTimer;
-
-    /**
      * @var LoopInterface
      */
     protected $eventLoop;

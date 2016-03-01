@@ -9,6 +9,7 @@ use React\EventLoop\Timer\TimerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PingCommand extends Command
@@ -37,7 +38,8 @@ class PingCommand extends Command
         $this
             ->setName("ping")
             ->addArgument("host")
-            ->addArgument("count", InputArgument::OPTIONAL, '', 10)
+            ->addOption("count", "c", InputOption::VALUE_OPTIONAL, '', 10)
+            ->addOption("interval", "i", InputOption::VALUE_OPTIONAL, '', 1)
         ;
     }
 
@@ -50,12 +52,14 @@ class PingCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $host = $input->getArgument('host');
-        $count = $input->getArgument('count');
+        $count = $input->getOption('count');
+        $interval = $input->getOption('interval');
 
         $ping = new Ping();
         $ping->setHost($host);
         $ping->setEventLoop($this->eventLoop);
         $ping->setCount($count);
+        $ping->setInterval($interval);
 
         $eventLoop = $this->eventLoop;
 
