@@ -161,7 +161,7 @@ class Ping
         $this->process = new Process($command, null, ['LC_ALL' => 'C']);
         
         if (null !== $this->exitCallback) {
-            $this->process->on('exit', $this->exitCallback);
+            $this->process->on('exit', [$this, 'exitProcessCallback']);
         }
 
         $this->process->start($this->eventLoop);
@@ -181,6 +181,11 @@ class Ping
         if (preg_match('/.*from\s(?<host>.*)\:\sicmp_seq.*time=(?<latency>[\d\.]+)/', $output, $matches)) {
             call_user_func($this->pingCallback, $matches['host'], $matches['latency']);
         }
+    }
+
+    public function exitProcessCallback()
+    {
+        call_user_func($this->exitCallback, $this);
     }
 
     /**

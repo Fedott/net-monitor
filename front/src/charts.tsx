@@ -15,10 +15,11 @@ export class Chart extends React.Component<any, ChartState> {
 
         WsConnector.globalListeners.push(this.updateData.bind(this));
         this.state = {ipData: {}};
+
+        document.chart = this;
     }
 
     updateData(data) {
-        var newPingList = {};
         data.forEach((item) => {
             if (null == this.state.ipData[item.ip]) {
                 this.state.ipData[item.ip] = [];
@@ -30,16 +31,15 @@ export class Chart extends React.Component<any, ChartState> {
                 this.state.ipData[item.ip].shift();
             }
 
-            newPingList[item.ip] = 1;
         });
 
-        for (var ip in this.state.ipData) {
-            if (1 != newPingList[ip]) {
-                this.state.ipData[ip] = null;
-            }
-        }
-
         this.forceUpdate();
+    }
+    
+    clearDataByIp(ip:string) {
+        if (null != this.state.ipData[ip]) {
+            this.state.ipData[ip] = null;
+        }
     }
 
     render() {

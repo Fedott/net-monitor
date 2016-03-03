@@ -4,6 +4,7 @@
 import * as React from 'react'
 import {ListItem, ListItemContent, ListItemAction, Switch} from 'react-mdl'
 import {RequestFactory, WsConnector} from "./ws/serverConnector";
+import {Chart} from "./charts";
 
 export interface Ip {
     ip: string;
@@ -26,6 +27,7 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
             request.command = "startPing";
         } else {
             request.command = "stopPing";
+            document.chart.clearDataByIp(this.props.item.ip);
         }
         request.params = {ip: this.props.item.ip};
         

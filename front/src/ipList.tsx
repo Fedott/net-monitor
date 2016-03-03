@@ -5,18 +5,19 @@ import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
 import {List} from 'react-mdl';
+import {Chart} from "./charts";
 
 export interface IpListState {
     ipList?: {[id:string]: Ip};
 }
 
-export interface IpListPops {}
+export interface IpListProps {}
 
-export class IpList extends React.Component<IpListPops, IpListState> {
+export class IpList extends React.Component<IpListProps, IpListState> {
     state: IpListState;
     reloadListCycle: boolean = false;
 
-    constructor(props:IpListPops, context:any) {
+    constructor(props:IpListProps, context:any) {
         super(props, context);
 
         this.state = {ipList: {}};

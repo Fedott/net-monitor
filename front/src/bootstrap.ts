@@ -3,8 +3,11 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IpList} from './ipList';
+import {IpList, IpListProps} from './ipList';
 import {Chart} from "./charts";
 
-ReactDOM.render(React.createElement(IpList), document.getElementById('ip-list'));
-ReactDOM.render(React.createElement(Chart), document.getElementById('chart-area'));
+var chartElement = React.createElement(Chart);
+var ipListElement = React.createElement(IpList);
+
+ReactDOM.render(ipListElement, document.getElementById('ip-list'));
+ReactDOM.render(chartElement, document.getElementById('chart-area'));

@@ -4,18 +4,13 @@ namespace Fedot\NetMonitor\Service;
 
 use DI\Annotation\Inject;
 use Fedot\NetMonitor\Model\Response;
-use JJG\Ping;
+use Fedot\Ping\Service\Ping;
 use Ratchet\ConnectionInterface;
 use React\EventLoop\LoopInterface;
-use React\EventLoop\Timer\TimerInterface;
 use SplObjectStorage;
 
 class PingService
 {
-    /**
-     * @var string[]
-     */
-    protected $ipForPing = [];
 
     /**
      * @var SplObjectStorage|ConnectionInterface[]
@@ -26,6 +21,11 @@ class PingService
      * @var bool
      */
     protected $isPingStarted = false;
+
+    /**
+     * @var Ping[]
+     */
+    protected $pingProcesses;
 
     /**
      * @var LoopInterface
@@ -59,12 +59,16 @@ class PingService
     {
         $this->connections->attach($connection);
 
-        if (!isset($this->ipForPing[$ip])) {
-            $this->ipForPing[$ip] = $ip;
-        }
+        if (!isset($this->pingProcesses[$ip])) {
+            $pingProcess = new Ping();
+            $pingProcess->setHost($ip);
+            $pingProcess->setEventLoop($this->eventLoop);
+            $pingProcess->setInterval(0.5);
+            $pingProcess->setPingCallback([$this, 'pingCallback']);
+            $pingProcess->setExitCallback([$this, 'stopCallback']);
+            $pingProcess->ping();
 
-        if (!$this->isPingStarted) {
-            $this->startPingLoop();
+            $this->pingProcesses[$ip] = $pingProcess;
         }
     }
 
@@ -73,45 +77,29 @@ class PingService
      */
     public function stopPing(string $ip)
     {
-        if (isset($this->ipForPing[$ip])) {
-            unset($this->ipForPing[$ip]);
-        }
-
-        if (count($this->ipForPing) < 1) {
-            $this->stopPingLoop();
+        if (isset($this->pingProcesses[$ip])) {
+            $this->pingProcesses[$ip]->stop();
         }
     }
 
-    public function loopCallback()
+    /**
+     * @param string $ip
+     * @param float  $latency
+     */
+    public function pingCallback(string $ip, float $latency)
     {
-        $result = [];
-
-        foreach ($this->ipForPing as $ip) {
-            $ping = new Ping($ip, 150);
-            $latency = $ping->ping();
-            $result[] = ['ip' => $ip, 'latency' => $latency];
-        }
-
-        $this->sendToAll($result);
+        $this->sendToAll([
+            ['ip' => $ip, 'latency' => $latency],
+        ]);
     }
 
-    public function startPingLoop()
+    /**
+     * @param Ping $pingProcess
+     */
+    public function stopCallback(Ping $pingProcess)
     {
-        if (!$this->isPingStarted) {
-            $this->isPingStarted = true;
-
-            $this->pingTimer = $this->eventLoop->addPeriodicTimer(0.5, [$this, 'loopCallback']);
-        }
-    }
-
-    public function stopPingLoop()
-    {
-        if ($this->isPingStarted) {
-            $this->isPingStarted = false;
-
-            $this->connections->removeAll($this->connections);
-
-            $this->eventLoop->cancelTimer($this->pingTimer);
+        if (isset($this->pingProcesses[$pingProcess->getHost()])) {
+            unset($this->pingProcesses[$pingProcess->getHost()]);
         }
     }
 
