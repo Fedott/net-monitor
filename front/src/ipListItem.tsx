@@ -36,8 +36,7 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
     }
 
     startTrace() {
-        Container.traceDialog.open();
-        Container.traceDialog.addContent("Test trace output");
+        Container.traceDialog.startTrace(this.props.item.ip);
     }
 
     render() {
