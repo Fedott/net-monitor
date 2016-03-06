@@ -4,6 +4,7 @@
 import * as React from 'react';
 import {LineChart} from 'react-d3';
 import {WsConnector} from './ws/serverConnector';
+import {Container} from "./container";
 
 export interface ChartState {
     ipData: {[ip:string]: Array<number>};
@@ -16,7 +17,7 @@ export class Chart extends React.Component<any, ChartState> {
         WsConnector.globalListeners.push(this.updateData.bind(this));
         this.state = {ipData: {}};
 
-        document.chart = this;
+        Container.chart = this;
     }
 
     updateData(data) {
