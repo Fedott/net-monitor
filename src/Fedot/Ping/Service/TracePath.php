@@ -19,7 +19,7 @@ class TracePath
     /**
      * @var callable
      */
-    protected $pingCallback;
+    protected $traceCallback;
 
     /**
      * @var callable
@@ -44,21 +44,41 @@ class TracePath
     }
 
     /**
-     * @return callable
+     * @return string
      */
-    public function getPingCallback()
+    public function getHost()
     {
-        return $this->pingCallback;
+        return $this->host;
     }
 
     /**
-     * @param callable $pingCallback
+     * @param string $host
      *
      * @return $this
      */
-    public function setPingCallback(callable $pingCallback)
+    public function setHost(string $host)
     {
-        $this->pingCallback = $pingCallback;
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getTraceCallback()
+    {
+        return $this->traceCallback;
+    }
+
+    /**
+     * @param callable $traceCallback
+     *
+     * @return $this
+     */
+    public function setTraceCallback(callable $traceCallback)
+    {
+        $this->traceCallback = $traceCallback;
 
         return $this;
     }
@@ -107,7 +127,7 @@ class TracePath
      */
     public function parseOutput(string $output)
     {
-        call_user_func($this->pingCallback, $output);
+        call_user_func($this->traceCallback, $output);
     }
 
     public function exitProcessCallback()

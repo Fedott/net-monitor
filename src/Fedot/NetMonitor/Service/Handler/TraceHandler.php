@@ -2,11 +2,33 @@
 
 namespace Fedot\NetMonitor\Service\Handler;
 
+use DI\Annotation\Inject;
 use Fedot\NetMonitor\Model\Request;
 use Fedot\NetMonitor\Model\Response;
+use Fedot\Ping\Service\TracePath;
+use React\EventLoop\LoopInterface;
 
 class TraceHandler extends AbstractRequestHandler
 {
+    /**
+     * @var LoopInterface
+     */
+    protected $eventLoop;
+
+    /**
+     * @Inject
+     *
+     * @param LoopInterface $eventLoop
+     *
+     * @return $this
+     */
+    public function setEventLoop(LoopInterface $eventLoop)
+    {
+        $this->eventLoop = $eventLoop;
+
+        return $this;
+    }
+
     /**
      * @param Request $request
      *
@@ -31,8 +53,9 @@ class TraceHandler extends AbstractRequestHandler
         $ip = $request->getParams()['ip'];
 
         $trace = new TracePath();
+        $trace->setEventLoop($this->eventLoop);
         $trace->setHost($ip);
-        $trace->setOutputCallback(function ($output) use ($request) {
+        $trace->setTraceCallback(function ($output) use ($request) {
             $response = new Response();
             $response->setRequestId($request->getId());
             $response->setResult([
@@ -41,6 +64,6 @@ class TraceHandler extends AbstractRequestHandler
             $request->getTargetConnection()->send(json_encode($response));
         });
 
-        $trace->start();
+        $trace->trace();
     }
 }

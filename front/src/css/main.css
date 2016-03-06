@@ -10,3 +10,7 @@ h1 {
 .ip-list {
     max-width: 300px;
 }
+
+#traceDialog .mdl-dialog {
+    width: 900px;
+}

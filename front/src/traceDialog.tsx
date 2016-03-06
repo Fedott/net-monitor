@@ -43,7 +43,7 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
     }
     
     traceCallback(response: Response) {
-        this.addContent(response.result.output);
+        this.addContent(response.result.content);
     }
 
     stopTrace() {
@@ -57,10 +57,18 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
     }
 
     render() {
+        var content = this.state.content.split("\n").map((str) => {
+            return (
+                <span>
+                    {str} <br/>
+                </span>
+            )
+        });
+
         return (
             <Dialog open={this.state.openDialog}>
                 <DialogTitle>TracePath {this.ip}</DialogTitle>
-                <DialogContent>{this.state.content}</DialogContent>
+                <DialogContent>{content}</DialogContent>
                 <DialogActions>
                     <Button type="button" onClick={this.stopTrace}>Cancel</Button>
                 </DialogActions>

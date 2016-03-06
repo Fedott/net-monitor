@@ -7,6 +7,7 @@ use Fedot\NetMonitor\Command\MonitorCommand;
 use Fedot\NetMonitor\Command\ServerCommand;
 use Fedot\NetMonitor\Service\Handler\IpsListHanlder;
 use Fedot\NetMonitor\Service\Handler\PingHandler;
+use Fedot\NetMonitor\Service\Handler\TraceHandler;
 
 return [
     'console.commands' => add([
@@ -19,5 +20,6 @@ return [
     'request-manager.handlers' => add([
         get(IpsListHanlder::class),
         get(PingHandler::class),
+        get(TraceHandler::class),
     ]),
 ];
