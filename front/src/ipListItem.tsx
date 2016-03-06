@@ -2,7 +2,7 @@
 /// <reference path="../typings/react-mdl.d.ts" />
 
 import * as React from 'react'
-import {ListItem, ListItemContent, ListItemAction, Switch} from 'react-mdl'
+import {ListItem, ListItemContent, ListItemAction, Switch, IconButton} from 'react-mdl'
 import {RequestFactory, WsConnector} from "./ws/serverConnector";
 import {Chart} from "./charts";
 
@@ -38,7 +38,8 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
         return (
             <ListItem>
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
-                <ListItemAction info="Ping">
+                <ListItemAction>
+                    <IconButton name="track_changes" />
                     <Switch onChange={this.togglePing.bind(this)} />
                 </ListItemAction>
             </ListItem>

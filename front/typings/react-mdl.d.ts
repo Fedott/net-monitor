@@ -9,6 +9,9 @@ declare namespace __ReactMDL {
     export class ListItemAction extends Component<any, any> {}
     export class Checkbox extends Component<any, any> {}
     export class Switch extends Component<any, any> {}
+    export class IconToggle extends Component<any, any> {}
+    export class IconButton extends Component<any, any> {}
+    export class Dialog extends Component<any, any> {}
 }
 
 declare module 'react-mdl' {
