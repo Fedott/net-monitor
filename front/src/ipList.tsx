@@ -5,7 +5,6 @@ import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
 import {List} from 'react-mdl';
-import {Chart} from "./charts";
 
 export interface IpListState {
     ipList?: {[id:string]: Ip};
@@ -31,6 +30,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
 
     reloadList() {
         if (!this.reloadListCycle) {
+            this.forceUpdate();
             return;
         }
 
@@ -64,9 +64,16 @@ export class IpList extends React.Component<IpListProps, IpListState> {
             IpItems.push(<IpListItem item={item} key={item.ip} />);
         }
 
+        var stopStartMessage;
+        if (this.reloadListCycle) {
+            stopStartMessage = "Остановить обновление";
+        } else {
+            stopStartMessage = "Запустить обновление";
+        }
+
         return (
             <div>
-                <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>Запустить/Остановить обновление</a>
+                <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>{stopStartMessage}</a>
                 <List>{IpItems}</List>
             </div>
         );

@@ -1,8 +1,9 @@
 import {Chart} from "./charts";
+import {TraceDialog} from "./traceDialog";
 
 class ContainerClass {
     chart: Chart;
-    // traceDialog: TraceDialog;
+    traceDialog: TraceDialog;
 }
 
 var ContainerInstance = new ContainerClass();

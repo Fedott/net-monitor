@@ -35,12 +35,17 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
         WsConnector.sendRequest(request);
     }
 
+    startTrace() {
+        Container.traceDialog.open();
+        Container.traceDialog.addContent("Test trace output");
+    }
+
     render() {
         return (
             <ListItem>
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
                 <ListItemAction>
-                    <IconButton name="track_changes" />
+                    <IconButton name="track_changes" onClick={this.startTrace.bind(this)} />
                     <Switch onChange={this.togglePing.bind(this)} />
                 </ListItemAction>
             </ListItem>

@@ -5,9 +5,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {IpList, IpListProps} from './ipList';
 import {Chart} from "./charts";
+import {TraceDialog} from "./traceDialog";
 
 var chartElement = React.createElement(Chart);
 var ipListElement = React.createElement(IpList);
 
 ReactDOM.render(ipListElement, document.getElementById('ip-list'));
 ReactDOM.render(chartElement, document.getElementById('chart-area'));
+ReactDOM.render(React.createElement(TraceDialog), document.getElementById("traceDialog"));
