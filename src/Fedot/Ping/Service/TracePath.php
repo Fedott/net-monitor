@@ -3,6 +3,7 @@ namespace Fedot\Ping\Service;
 
 use React\ChildProcess\Process;
 use React\EventLoop\LoopInterface;
+use React\Stream\Stream;
 
 class TracePath
 {
@@ -140,7 +141,7 @@ class TracePath
      */
     protected function getCommand()
     {
-        $command = "tracepath {$this->host}";
+        $command = "traceroute {$this->host} -m 17";
 
         return $command;
     }
