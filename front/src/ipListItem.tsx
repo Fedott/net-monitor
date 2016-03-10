@@ -10,6 +10,7 @@ import {Container} from "./container";
 export interface Ip {
     ip: string;
     ping?: boolean;
+    checked?: boolean;
 }
 
 export interface IpItemState {}
@@ -19,6 +20,11 @@ export interface IpItemProps {
 }
 
 export class IpListItem extends React.Component<IpItemProps, IpItemState> {
+    toggleChecked() {
+        this.props.item.checked = !this.props.item.checked;
+        this.forceUpdate();
+    }
+
     togglePing() {
         this.props.item.ping = !this.props.item.ping;
 
@@ -40,10 +46,18 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
     }
 
     render() {
+        var style = {
+            color: null,
+        };
+        if (this.props.item.checked) {
+            style.color = "lightgray";
+        }
+
         return (
-            <ListItem>
+            <ListItem style={style}>
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
                 <ListItemAction>
+                    <IconButton name="cancel" onClick={this.toggleChecked.bind(this)} />
                     <IconButton name="track_changes" onClick={this.startTrace.bind(this)} />
                     <Switch onChange={this.togglePing.bind(this)} />
                 </ListItemAction>
