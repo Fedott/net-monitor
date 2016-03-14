@@ -42,6 +42,10 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
     }
 
     startTrace() {
+        if (this.props.item.ping) {
+            this.togglePing();
+        }
+
         Container.traceDialog.startTrace(this.props.item.ip);
     }
 
