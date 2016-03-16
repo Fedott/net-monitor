@@ -44,6 +44,7 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
     startTrace() {
         if (this.props.item.ping) {
             this.togglePing();
+            this.forceUpdate();
         }
 
         Container.traceDialog.startTrace(this.props.item.ip);
@@ -62,8 +63,12 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
                 <ListItemAction>
                     <IconButton name="cancel" onClick={this.toggleChecked.bind(this)} />
+                </ListItemAction>
+                <ListItemAction>
                     <IconButton name="track_changes" onClick={this.startTrace.bind(this)} />
-                    <Switch onChange={this.togglePing.bind(this)} />
+                </ListItemAction>
+                <ListItemAction>
+                    <Switch onChange={this.togglePing.bind(this)} checked={this.props.item.ping} />
                 </ListItemAction>
             </ListItem>
         );

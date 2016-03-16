@@ -36,7 +36,5 @@ gulp.task('bundle', ['through', 'css', 'compile'], function () {
 });
 
 gulp.task('default', ['bundle'], function () {
-    gulp.watch('src/**', function () {
-        gulp.run('bundle');
-    });
+    gulp.watch('src/**', ['bundle']);
 });
