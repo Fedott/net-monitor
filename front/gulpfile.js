@@ -34,3 +34,9 @@ gulp.task('bundle', ['through', 'css', 'compile'], function () {
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('dist'));
 });
+
+gulp.task('default', ['bundle'], function () {
+    gulp.watch('src/**', function () {
+        gulp.run('bundle');
+    });
+});
