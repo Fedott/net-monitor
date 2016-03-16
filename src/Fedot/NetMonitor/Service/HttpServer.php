@@ -2,6 +2,8 @@
 
 namespace Fedot\NetMonitor\Service;
 
+use Dflydev\ApacheMimeTypes\PhpRepository;
+use finfo;
 use Guzzle\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServerInterface;
@@ -9,6 +11,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HttpServer implements HttpServerInterface
 {
+    /**
+     * @var PhpRepository
+     */
+    protected $mimeRepositiory;
+
+    public function __construct()
+    {
+        $this->mimeRepositiory = new PhpRepository();
+    }
+
     /**
      * This is called before or after a socket is closed (depends on how it's closed).  SendMessage to $conn will not result in an error if it has already been closed.
      *
@@ -53,7 +65,11 @@ class HttpServer implements HttpServerInterface
         if (!file_exists($fullPath)) {
             $response = new Response('', 404);
         } else {
-            $response = new Response(file_get_contents($fullPath), 200);
+            $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
+            $mimeType = $this->mimeRepositiory->findType($fileExtension);
+            $response = new Response(file_get_contents($fullPath), 200, [
+                'Content-Type' => $mimeType,
+            ]);
         }
 
         $conn->send($response);
