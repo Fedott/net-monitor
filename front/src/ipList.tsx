@@ -80,8 +80,14 @@ export class IpList extends React.Component<IpListProps, IpListState> {
 
         return (
             <div>
-                <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>{stopStartMessage}</a>
-                <Switch onChange={this.toggleFiltered.bind(this)} checked={this.state.filtered} />
+                <div id="controls">
+                    <span id="control-reload">
+                        <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>{stopStartMessage}</a>
+                    </span>
+                    <span id="control-filter">
+                        <Switch onChange={this.toggleFiltered.bind(this)} checked={this.state.filtered} />
+                    </span>
+                </div>
                 <List>{IpItems}</List>
             </div>
         );

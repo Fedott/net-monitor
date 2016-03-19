@@ -16,8 +16,8 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
     state: TraceDialogState;
     ip: string;
 
-    constructor(props) {
-        super(props);
+    constructor(props, context:any) {
+        super(props, context);
 
         this.state = {openDialog: false, content: ''};
         this.startTrace = this.startTrace.bind(this);
@@ -57,13 +57,21 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
     }
 
     render() {
+        var i = 1;
         var content = this.state.content.split("\n").map((str) => {
+            i++;
             return (
-                <span>
+                <span key={i}>
                     {str} <br/>
                 </span>
             )
         });
+
+        if (this.state.openDialog) {
+            setTimeout(() => {
+                document.querySelector("dialog").style.top = "10px";
+            })
+        }
 
         return (
             <Dialog open={this.state.openDialog}>

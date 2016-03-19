@@ -14,3 +14,10 @@ h1 {
 #traceDialog .mdl-dialog {
     width: 900px;
 }
+
+#controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}

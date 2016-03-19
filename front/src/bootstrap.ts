@@ -9,7 +9,8 @@ import {TraceDialog} from "./traceDialog";
 
 var chartElement = React.createElement(Chart);
 var ipListElement = React.createElement(IpList);
+var traceDialogEleent = React.createElement(TraceDialog, {});
 
 ReactDOM.render(ipListElement, document.getElementById('ip-list'));
 ReactDOM.render(chartElement, document.getElementById('chart-area'));
-ReactDOM.render(React.createElement(TraceDialog), document.getElementById("traceDialog"));
+ReactDOM.render(traceDialogEleent, document.getElementById("traceDialog"));
