@@ -4,10 +4,11 @@ import * as React from 'react';
 import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
-import {List} from 'react-mdl';
+import {List, Switch} from 'react-mdl';
 
 export interface IpListState {
     ipList?: {[id:string]: Ip};
+    filtered?: boolean;
 }
 
 export interface IpListProps {}
@@ -19,7 +20,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
     constructor(props:IpListProps, context:any) {
         super(props, context);
 
-        this.state = {ipList: {}};
+        this.state = {ipList: {}, filtered: true};
     }
 
     toggleReloadList() {
@@ -37,6 +38,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
         var request:Request = RequestFactory.createRequest();
         request.command = 'getIps';
         request.resultFunction = this.updateCallback.bind(this);
+        request.params = {withoutFilter: !this.state.filtered};
 
         WsConnector.sendRequest(request);
     }
@@ -57,6 +59,11 @@ export class IpList extends React.Component<IpListProps, IpListState> {
         setTimeout(this.reloadList.bind(this), 1000);
     }
 
+    toggleFiltered() {
+        // this.state.filtered = !this.state.filtered;
+        this.setState({filtered: !this.state.filtered});
+    }
+
     render() {
         var IpItems = [];
         for (var itemKey in this.state.ipList) {
@@ -74,6 +81,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
         return (
             <div>
                 <a className="mdl-button" id="refresh-ips" onClick={this.toggleReloadList.bind(this)}>{stopStartMessage}</a>
+                <Switch onChange={this.toggleFiltered.bind(this)} checked={this.state.filtered} />
                 <List>{IpItems}</List>
             </div>
         );

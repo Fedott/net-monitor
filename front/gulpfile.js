@@ -35,6 +35,6 @@ gulp.task('bundle', ['through', 'css', 'compile'], function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['bundle'], function () {
+gulp.task('watch', ['bundle'], function () {
     gulp.watch('src/**', ['bundle']);
 });

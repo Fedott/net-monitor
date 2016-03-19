@@ -76,6 +76,17 @@ class Request
     }
 
     /**
+     * @param string $param
+     * @param null   $default
+     *
+     * @return mixed|null
+     */
+    public function getParam($param, $default = null)
+    {
+        return $this->params[$param] ?? $default;
+    }
+
+    /**
      * @param array $params
      *
      * @return $this

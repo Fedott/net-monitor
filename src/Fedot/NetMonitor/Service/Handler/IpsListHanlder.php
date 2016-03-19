@@ -73,7 +73,9 @@ class IpsListHanlder extends AbstractRequestHandler
     public function handle(Request $request)
     {
         $connections = $this->routerService->getConnections();
-        $connections = $this->connectionsAnalyzer->filter($connections);
+        if (!$request->getParam('withoutFilter')) {
+            $connections = $this->connectionsAnalyzer->filter($connections);
+        }
         $response = new Response();
         
         $response->setRequestId($request->getId());
