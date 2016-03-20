@@ -27,13 +27,42 @@ export var RequestFactory = RequestFactoryInstance;
 class WsConnectorClass {
     requests: {[id:number]: Request};
     wsConnection: WebSocket;
-    globalListeners: Function[];
+    globalResponseListeners: Function[];
+    isConnected: boolean = false;
+    connectionListeners: Function[];
 
     constructor() {
+        this.requests = {};
+        this.globalResponseListeners = [];
+        this.connectionListeners = [];
+
+        this.connectToWebSocket();
+    }
+
+    private connectToWebSocket() {
         this.wsConnection = new WebSocket('ws://localhost:1788/ping');
         this.wsConnection.addEventListener('message', this.parseResponse.bind(this));
-        this.requests = {};
-        this.globalListeners = [];
+        this.wsConnection.addEventListener('open', this.connected.bind(this));
+        this.wsConnection.addEventListener('close', this.disconnected.bind(this));
+    };
+
+    connected() {
+        this.isConnected = true;
+        this.emmitConnectionStatusEvent();
+        console.log(this.isConnected, 'connected');
+    }
+
+    disconnected() {
+        this.isConnected = false;
+        console.log(this.isConnected, 'disconnected');
+
+        setTimeout(this.connectToWebSocket.bind(this), 1000);
+    }
+    
+    emmitConnectionStatusEvent() {
+        this.connectionListeners.forEach((func) => {
+            func(this.isConnected);
+        })
     }
     
     sendRequest(request: Request) {
@@ -56,7 +85,7 @@ class WsConnectorClass {
                 this.requests[requestId].resultFunction(response);
             }
         } else if (null === requestId) {
-            this.globalListeners.forEach((func) => {
+            this.globalResponseListeners.forEach((func) => {
                 func(data.result);
             })
         }

@@ -4,11 +4,12 @@ import * as React from 'react';
 import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
-import {List, Switch} from 'react-mdl';
+import {List, Switch, Badge} from 'react-mdl';
 
 export interface IpListState {
     ipList?: {[id:string]: Ip};
     filtered?: boolean;
+    wsConnected?: boolean;
 }
 
 export interface IpListProps {}
@@ -20,7 +21,12 @@ export class IpList extends React.Component<IpListProps, IpListState> {
     constructor(props:IpListProps, context:any) {
         super(props, context);
 
-        this.state = {ipList: {}, filtered: true};
+        this.state = {ipList: {}, filtered: true, wsConnected: WsConnector.isConnected};
+        WsConnector.connectionListeners.push(this.wsConnectionStatusListener.bind(this));
+    }
+
+    wsConnectionStatusListener(status: boolean) {
+        this.setState({wsConnected: status});
     }
 
     toggleReloadList() {

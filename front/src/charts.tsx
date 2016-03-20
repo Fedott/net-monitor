@@ -14,7 +14,7 @@ export class Chart extends React.Component<any, ChartState> {
     constructor(props:any, context:any) {
         super(props, context);
 
-        WsConnector.globalListeners.push(this.updateData.bind(this));
+        WsConnector.globalResponseListeners.push(this.updateData.bind(this));
         this.state = {ipData: {}};
 
         Container.chart = this;
