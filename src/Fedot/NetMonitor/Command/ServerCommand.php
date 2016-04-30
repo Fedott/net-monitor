@@ -87,10 +87,10 @@ class ServerCommand extends Command
 
         $app = new ServerApplication($this->eventLoop);
 
-        $app->route('/', $this->httpServer);
-        $app->route('/ping', $this->messenger);
-        $app->route('/{path}/{file}', $this->httpServer);
-        $app->route('/{file}', $this->httpServer);
+        $app->route('/', $this->httpServer, ['*'], '');
+        $app->route('/ping', $this->messenger, ['*'], '');
+        $app->route('/{path}/{file}', $this->httpServer, ['*'], '');
+        $app->route('/{file}', $this->httpServer, ['*'], '');
 
         $this->eventLoop->run();
 

@@ -40,7 +40,7 @@ class WsConnectorClass {
     }
 
     private connectToWebSocket() {
-        this.wsConnection = new WebSocket('ws://localhost:1788/ping');
+        this.wsConnection = new WebSocket('ws://192.168.1.17:1788/ping');
         this.wsConnection.addEventListener('message', this.parseResponse.bind(this));
         this.wsConnection.addEventListener('open', this.connected.bind(this));
         this.wsConnection.addEventListener('close', this.disconnected.bind(this));
