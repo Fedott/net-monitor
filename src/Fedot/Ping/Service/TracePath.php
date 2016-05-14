@@ -141,7 +141,7 @@ class TracePath
      */
     protected function getCommand()
     {
-        $command = "traceroute {$this->host} -m 17";
+        $command = "traceroute {$this->host} -m 20";
 
         return $command;
     }
