@@ -103,7 +103,7 @@ class TracePath
 
         return $this;
     }
-    
+
     public function trace()
     {
         $command = $this->getCommand();
@@ -128,6 +128,10 @@ class TracePath
      */
     public function parseOutput(string $output)
     {
+//        $parsed = $this->parseResult($output);
+//        var_dump($parsed, $output);
+//        $output = implode("\n", array_map(function ($line) {return implode(" ", $line);}, $parsed));
+        $output = $line = preg_replace('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', '', $output);
         call_user_func($this->traceCallback, $output);
     }
 
@@ -141,8 +145,42 @@ class TracePath
      */
     protected function getCommand()
     {
-        $command = "traceroute {$this->host} -m 20";
+        $command = "traceroute {$this->host} -m 20 -n";
 
         return $command;
+    }
+
+    public function parseResult($output)
+    {
+        $lines = explode("\n", $output);
+
+        $result = [];
+        foreach ($lines as $line) {
+            $line = preg_replace('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', '', $line);
+            if (preg_match('/^\s*(\d+)\s+(((\d+\.\d+)\sms)|\*)\s+(((\d+\.\d+)\sms)|\*)\s+(((\d+\.\d+)\sms)|\*)/', $line, $matches)) {
+                $lineResult = [];
+                if ($matches[2] !== '*') {
+                    $lineResult[] = $matches[4];
+                } else {
+                    $lineResult[] = '*';
+                }
+
+                if ($matches[5] !== '*') {
+                    $lineResult[] = $matches[7];
+                } else {
+                    $lineResult[] = '*';
+                }
+
+                if ($matches[8] !== '*') {
+                    $lineResult[] = $matches[10];
+                } else {
+                    $lineResult[] = '*';
+                }
+
+                $result[(int) $matches[1]] = $lineResult;
+            }
+        }
+
+        return $result;
     }
 }
