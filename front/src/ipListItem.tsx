@@ -2,7 +2,7 @@
 /// <reference path="../typings/react-mdl.d.ts" />
 
 import * as React from 'react'
-import {ListItem, ListItemContent, ListItemAction, Switch, IconButton} from 'react-mdl'
+import {ListItem, ListItemContent, ListItemAction, Switch, IconButton, Button} from 'react-mdl'
 import {RequestFactory, WsConnector} from "./ws/serverConnector";
 import {Chart} from "./charts";
 import {Container} from "./container";
@@ -37,7 +37,7 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
             Container.chart.clearDataByIp(this.props.item.ip);
         }
         request.params = {ip: this.props.item.ip};
-        
+
         WsConnector.sendRequest(request);
     }
 
@@ -62,13 +62,10 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
             <ListItem style={style}>
                 <ListItemContent>{this.props.item.ip}</ListItemContent>
                 <ListItemAction>
-                    <IconButton name="cancel" onClick={this.toggleChecked.bind(this)} />
+                    <Button onClick={this.toggleChecked.bind(this)} disabled={this.props.item.checked}>Hide</Button>
                 </ListItemAction>
                 <ListItemAction>
-                    <IconButton name="track_changes" onClick={this.startTrace.bind(this)} />
-                </ListItemAction>
-                <ListItemAction>
-                    <Switch onChange={this.togglePing.bind(this)} checked={this.props.item.ping} />
+                    <Button onClick={this.startTrace.bind(this)} disabled={this.props.item.checked}>Trace</Button>
                 </ListItemAction>
             </ListItem>
         );

@@ -29,9 +29,9 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
 
     startTrace(ip:string) {
         this.setState({openDialog: true, content: ''});
-        
+
         this.ip = ip;
-        
+
         var request = RequestFactory.createRequest();
         request.command = "startTrace";
         request.params = {
@@ -41,7 +41,7 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
 
         WsConnector.sendRequest(request);
     }
-    
+
     traceCallback(response: Response) {
         this.addContent(response.result.content);
     }
@@ -69,6 +69,7 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
 
         if (this.state.openDialog) {
             setTimeout(() => {
+                //noinspection TypeScriptUnresolvedVariable
                 document.querySelector("dialog").style.top = "10px";
             })
         }
