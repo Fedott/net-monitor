@@ -84,6 +84,8 @@ class MonitorCommand extends Command
         $table = new Table($output);
         $headers = [
             'destination',
+            'source',
+            'dport',
             'frequency',
         ];
 
@@ -100,6 +102,8 @@ class MonitorCommand extends Command
         foreach ($connections as $connection) {
             $row = [
                 $connection->getDestination(),
+                $connection->getSource(),
+                $connection->getDestinationPort(),
                 $connection->getFrequency(),
             ];
 

@@ -4,6 +4,7 @@ namespace Fedot\NetMonitor\Service\Handler;
 
 
 use DI\Annotation\Inject;
+use Fedot\NetMonitor\DTO\Connection;
 use Fedot\NetMonitor\Model\Request;
 use Fedot\NetMonitor\Model\Response;
 use Fedot\NetMonitor\Service\ConnectionsAnalyzer;
@@ -24,8 +25,25 @@ class IpsListHanlder extends AbstractRequestHandler
     protected $connectionsAnalyzer;
 
     /**
+     * @var array
+     */
+    protected $localIpRanges;
+
+    /**
+     * IpsListHanlder constructor.
+     */
+    public function __construct()
+    {
+        $this->localIpRanges = [
+            [ip2long('10.0.0.0'), ip2long('10.255.255.255')],
+            [ip2long('172.16.0.0'), ip2long('172.31.255.255')],
+            [ip2long('192.168.0.0'), ip2long('192.168.255.255')],
+        ];
+    }
+
+    /**
      * @Inject
-     * 
+     *
      * @param RouterCommandService $routerService
      *
      * @return $this
@@ -50,7 +68,7 @@ class IpsListHanlder extends AbstractRequestHandler
 
         return $this;
     }
-    
+
     /**
      * @param Request $request
      *
@@ -61,8 +79,26 @@ class IpsListHanlder extends AbstractRequestHandler
         if ($request->getCommand() == static::COMMAND) {
             return true;
         }
-        
+
         return false;
+    }
+
+    /**
+     * @param Connection $connection
+     *
+     * @return string
+     */
+    protected function getIpFromConnection(Connection $connection)
+    {
+        foreach ($this->localIpRanges as $localIpRange) {
+            if ($localIpRange[0] < ip2long($connection->getDestination())
+                && ip2long($connection->getDestination()) < $localIpRange[1]
+            ) {
+                return $connection->getSource();
+            }
+        }
+
+        return $connection->getDestination();
     }
 
     /**
@@ -77,16 +113,16 @@ class IpsListHanlder extends AbstractRequestHandler
             $connections = $this->connectionsAnalyzer->filter($connections);
         }
         $response = new Response();
-        
+
         $response->setRequestId($request->getId());
 
         $result = [
             'ips' => [],
         ];
         foreach ($connections as $connection) {
-            $result['ips'][] = $connection->getDestination();
+            $result['ips'][] = $this->getIpFromConnection($connection);
         }
-        
+
         $response->setResult($result);
 
         $request->getTargetConnection()->send(json_encode($response));

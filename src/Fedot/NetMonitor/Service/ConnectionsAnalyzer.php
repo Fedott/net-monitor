@@ -187,11 +187,24 @@ class ConnectionsAnalyzer
      */
     public function filterFunction(Connection $connection)
     {
-        if ($connection->getSource() !== $this->consoleIp) {
+        if (
+            $connection->getSource() !== $this->consoleIp
+            && $connection->getDestination() !== '10.0.199.70'
+        ) {
             return false;
         }
 
-        if ($this->needSkipIp($connection->getDestination())) {
+        if (in_array($connection->getDestinationPort(), [
+            80,
+            443,
+            5060
+        ])) {
+            return false;
+        }
+
+        if ($this->needSkipIp($connection->getDestination())
+//            || $this->needSkipIp($connection->getSource())
+        ) {
             return false;
         }
 
