@@ -25,23 +25,6 @@ class IpsListHanlder extends AbstractRequestHandler
     protected $connectionsAnalyzer;
 
     /**
-     * @var array
-     */
-    protected $localIpRanges;
-
-    /**
-     * IpsListHanlder constructor.
-     */
-    public function __construct()
-    {
-        $this->localIpRanges = [
-            [ip2long('10.0.0.0'), ip2long('10.255.255.255')],
-            [ip2long('172.16.0.0'), ip2long('172.31.255.255')],
-            [ip2long('192.168.0.0'), ip2long('192.168.255.255')],
-        ];
-    }
-
-    /**
      * @Inject
      *
      * @param RouterCommandService $routerService
@@ -84,24 +67,6 @@ class IpsListHanlder extends AbstractRequestHandler
     }
 
     /**
-     * @param Connection $connection
-     *
-     * @return string
-     */
-    protected function getIpFromConnection(Connection $connection)
-    {
-        foreach ($this->localIpRanges as $localIpRange) {
-            if ($localIpRange[0] < ip2long($connection->getDestination())
-                && ip2long($connection->getDestination()) < $localIpRange[1]
-            ) {
-                return $connection->getSource();
-            }
-        }
-
-        return $connection->getDestination();
-    }
-
-    /**
      * @param Request $request
      *
      * @return mixed
@@ -120,7 +85,11 @@ class IpsListHanlder extends AbstractRequestHandler
             'ips' => [],
         ];
         foreach ($connections as $connection) {
-            $result['ips'][] = $this->getIpFromConnection($connection);
+            $remoteIp = $connection->getSource() == '192.168.1.47'
+                ? $connection->getDestination()
+                : $connection->getSource()
+            ;
+            $result['ips'][] = $remoteIp;
         }
 
         $response->setResult($result);

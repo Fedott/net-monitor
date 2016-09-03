@@ -194,17 +194,20 @@ class ConnectionsAnalyzer
             return false;
         }
 
-        if (in_array($connection->getDestinationPort(), [
-            80,
-            443,
-            5060
-        ])) {
+        $fifaPs4Ports = [
+            3074,
+            3478,
+            3479,
+            3659,
+            6000,
+        ];
+        if (!in_array($connection->getDestinationPort(), $fifaPs4Ports)
+            && !in_array($connection->getDestinationOutPort(), $fifaPs4Ports)
+        ) {
             return false;
         }
 
-        if ($this->needSkipIp($connection->getDestination())
-//            || $this->needSkipIp($connection->getSource())
-        ) {
+        if ($this->needSkipIp($connection->getDestination())) {
             return false;
         }
 
