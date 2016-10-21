@@ -5,7 +5,7 @@ use React\ChildProcess\Process;
 use React\EventLoop\LoopInterface;
 use React\Stream\Stream;
 
-class TracePath
+class TraceRoute
 {
     /**
      * @var LoopInterface

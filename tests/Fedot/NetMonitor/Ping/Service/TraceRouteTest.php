@@ -1,10 +1,10 @@
 <?php
 namespace Fedot\NetMonitor\Ping\Service;
 
-use Fedot\Ping\Service\TracePath;
+use Fedot\Ping\Service\TraceRoute;
 use PHPUnit_Framework_TestCase;
 
-class TracePathTest extends PHPUnit_Framework_TestCase
+class TraceRouteTest extends PHPUnit_Framework_TestCase
 {
     public function testParseResult()
     {
@@ -26,7 +26,7 @@ class TracePathTest extends PHPUnit_Framework_TestCase
 15  * 213.180.193.3  17.531 ms *
 16  213.180.193.3  9.911 ms * *
 ";
-        $service = new TracePath();
+        $service = new TraceRoute();
         $result = $service->parseResult($output);
 
         $expectedResult = [

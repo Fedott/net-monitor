@@ -4,7 +4,7 @@ namespace Fedot\Ping\Command;
 
 use DI\Annotation\Inject;
 use Fedot\Ping\Service\Ping;
-use Fedot\Ping\Service\TracePath;
+use Fedot\Ping\Service\TraceRoute;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\TimerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +22,7 @@ class TraceCommand extends Command
 
     /**
      * @Inject
-     * 
+     *
      * @param LoopInterface $eventLoop
      *
      * @return $this
@@ -52,7 +52,7 @@ class TraceCommand extends Command
     {
         $host = $input->getArgument('host');
 
-        $trace = new TracePath();
+        $trace = new TraceRoute();
         $trace->setHost($host);
         $trace->setEventLoop($this->eventLoop);
 
@@ -68,7 +68,7 @@ class TraceCommand extends Command
         });
 
         $trace->trace();
-        
+
         $this->eventLoop->run();
     }
 }
