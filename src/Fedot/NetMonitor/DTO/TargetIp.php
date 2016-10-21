@@ -28,4 +28,9 @@ class TargetIp
      * @var float
      */
     public $pingLatency;
+
+    /**
+     * @var int
+     */
+    public $traceSteps = 0;
 }

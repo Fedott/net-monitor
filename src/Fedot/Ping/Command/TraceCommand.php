@@ -4,6 +4,7 @@ namespace Fedot\Ping\Command;
 
 use DI\Annotation\Inject;
 use Fedot\Ping\Service\Ping;
+use Fedot\Ping\Service\TraceRouteNG;
 use Fedot\Ping\Service\TraceRoute;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\TimerInterface;
@@ -52,14 +53,15 @@ class TraceCommand extends Command
     {
         $host = $input->getArgument('host');
 
-        $trace = new TraceRoute();
+        $trace = new TraceRouteNG();
         $trace->setHost($host);
         $trace->setEventLoop($this->eventLoop);
 
         $eventLoop = $this->eventLoop;
 
         $trace->setTraceCallback(function ($out) use ($output) {
-            $output->write($out);
+            $output->write('"' . $out . '"');
+            $output->write("\n--------------\n");
         });
 
         $trace->setExitCallback(function () use ($eventLoop, $output) {
