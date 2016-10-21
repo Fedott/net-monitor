@@ -57,6 +57,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
                 lastTracedIp: ipObject.lastTracedIp,
                 traceLatency: ipObject.traceLatency,
                 traceSteps: ipObject.traceSteps,
+                traceFails: ipObject.traceFails,
             };
         });
 

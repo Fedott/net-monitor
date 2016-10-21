@@ -405,6 +405,10 @@ class ConnectionsAnalyzer
                         $targetIp->traceSteps = $traceResult->step;
                         $targetIp->lastTracedIp = $traceResult->ip1 ?: $traceResult->ip2 ?: $traceResult->ip3;
                         $targetIp->traceLatency = $traceResult->latency1 ?: $traceResult->latency2 ?: $traceResult->latency3;
+
+                        !$traceResult->latency1 && $targetIp->traceFails++;
+                        !$traceResult->latency2 && $targetIp->traceFails++;
+                        !$traceResult->latency3 && $targetIp->traceFails++;
                     }
                 });
                 $traceRouteNG->trace();

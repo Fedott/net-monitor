@@ -12,6 +12,7 @@ export interface Ip {
     lastTracedIp: string;
     traceLatency: string;
     traceSteps: number;
+    traceFails: number;
     ping?: boolean;
     checked?: boolean;
 }
@@ -81,7 +82,7 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
             <ListItem style={style}>
                 <ListItemContent>{this.state.ip.ip}</ListItemContent>
                 <ListItemAction>
-                    <div>{this.state.ip.traceSteps} | {this.state.ip.traceLatency}</div>
+                    <div>{this.state.ip.traceSteps} | {this.state.ip.traceLatency} | {this.state.ip.traceFails}</div>
                 </ListItemAction>
                 <ListItemAction>
                     <Button onClick={this.toggleChecked.bind(this)} disabled={this.state.ip.checked}>Hide</Button>

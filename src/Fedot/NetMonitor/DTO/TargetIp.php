@@ -25,6 +25,11 @@ class TargetIp
     public $traceLatency;
 
     /**
+     * @var int
+     */
+    public $traceFails = 0;
+
+    /**
      * @var float
      */
     public $pingLatency;
