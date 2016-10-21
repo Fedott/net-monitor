@@ -5,6 +5,7 @@ namespace Fedot\NetMonitor\Service;
 
 use DI\Annotation\Inject;
 use Fedot\NetMonitor\DTO\Connection;
+use Fedot\NetMonitor\DTO\TargetIp;
 use JJG\Ping;
 use PhpWhois\Whois;
 use Predis\Client;
@@ -41,6 +42,11 @@ class ConnectionsAnalyzer
      * @var int[]
      */
     protected $skippedRange;
+
+    /**
+     * @var TargetIp
+     */
+    protected $targetIps;
 
     public function __construct()
     {
@@ -148,6 +154,30 @@ class ConnectionsAnalyzer
         }
 
         return false;
+    }
+
+    /**
+     * @param Connection[] $connections
+     *
+     * @return TargetIp[]
+     */
+    public function convertConnectionsToTargetIps(array $connections): array
+    {
+        $targetIps = array_map(function (Connection $connection) {
+            $targetIp = new TargetIp();
+
+            if ($connection->getSource() === $this->consoleIp) {
+                $targetIp->ip = $connection->getDestination();
+            } else {
+                $targetIp->ip = $connection->getSource();
+            }
+
+            $targetIp = $this->loadMoreInformation($targetIp);
+
+            return $targetIp;
+        }, $connections);
+
+        return $targetIps;
     }
 
     /**
@@ -320,5 +350,14 @@ class ConnectionsAnalyzer
         }
 
         return $connection;
+    }
+
+    private function loadMoreInformation(TargetIp $targetIp): TargetIp
+    {
+        if (isset($this->targetIps[$targetIp->ip])) {
+            return $this->targetIps[$targetIp->ip];
+        }
+
+        return $targetIp;
     }
 }

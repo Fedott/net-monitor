@@ -77,6 +77,7 @@ class IpsListHanlder extends AbstractRequestHandler
         if (!$request->getParam('withoutFilter')) {
             $connections = $this->connectionsAnalyzer->filter($connections);
         }
+        $targetIps = $this->connectionsAnalyzer->convertConnectionsToTargetIps($connections);
         $response = new Response();
 
         $response->setRequestId($request->getId());
@@ -84,12 +85,8 @@ class IpsListHanlder extends AbstractRequestHandler
         $result = [
             'ips' => [],
         ];
-        foreach ($connections as $connection) {
-            $remoteIp = $connection->getSource() == '192.168.1.47'
-                ? $connection->getDestination()
-                : $connection->getSource()
-            ;
-            $result['ips'][] = $remoteIp;
+        foreach ($targetIps as $targetIp) {
+            $result['ips'][] = $targetIp->ip;
         }
 
         $response->setResult($result);

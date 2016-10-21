@@ -88,9 +88,9 @@ export class IpList extends React.Component<IpListProps, IpListState> {
             <div>
                 <div id="controls">
                     <span id="control-reload">
-                        <button 
-                            className="mdl-button" 
-                            id="refresh-ips" 
+                        <button
+                            className="mdl-button"
+                            id="refresh-ips"
                             onClick={this.toggleReloadList.bind(this)}
                         >{stopStartMessage}</button>
                     </span>
