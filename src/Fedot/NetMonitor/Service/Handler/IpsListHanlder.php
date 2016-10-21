@@ -78,6 +78,7 @@ class IpsListHanlder extends AbstractRequestHandler
             $connections = $this->connectionsAnalyzer->filter($connections);
         }
         $targetIps = $this->connectionsAnalyzer->convertConnectionsToTargetIps($connections);
+        $this->connectionsAnalyzer->autoPingTrace($targetIps);
         $response = new Response();
 
         $response->setRequestId($request->getId());
@@ -86,7 +87,7 @@ class IpsListHanlder extends AbstractRequestHandler
             'ips' => [],
         ];
         foreach ($targetIps as $targetIp) {
-            $result['ips'][] = $targetIp->ip;
+            $result['ips'][] = $targetIp;
         }
 
         $response->setResult($result);

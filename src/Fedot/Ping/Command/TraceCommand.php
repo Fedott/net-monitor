@@ -3,6 +3,7 @@
 namespace Fedot\Ping\Command;
 
 use DI\Annotation\Inject;
+use Fedot\NetMonitor\DTO\TraceResult;
 use Fedot\Ping\Service\Ping;
 use Fedot\Ping\Service\TraceRouteNG;
 use Fedot\Ping\Service\TraceRoute;
@@ -59,9 +60,9 @@ class TraceCommand extends Command
 
         $eventLoop = $this->eventLoop;
 
-        $trace->setTraceCallback(function ($out) use ($output) {
-            $output->write('"' . $out . '"');
-            $output->write("\n--------------\n");
+        $trace->setTraceCallback(function (TraceResult $traceResult) use ($output) {
+            $test = json_encode($traceResult);
+            $output->writeln($test);
         });
 
         $trace->setExitCallback(function () use ($eventLoop, $output) {

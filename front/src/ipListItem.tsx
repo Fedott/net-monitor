@@ -9,17 +9,36 @@ import {Container} from "./container";
 
 export interface Ip {
     ip: string;
+    lastTracedIp: string;
+    traceLatency: string;
+    traceSteps: number;
     ping?: boolean;
     checked?: boolean;
 }
 
-export interface IpItemState {}
+export interface IpItemState {
+    ip: Ip;
+}
 
 export interface IpItemProps {
     item: Ip;
 }
 
 export class IpListItem extends React.Component<IpItemProps, IpItemState> {
+    constructor(props: IpItemProps, state: IpItemState) {
+        super(props, state);
+
+        this.state = {
+            ip: props.item,
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            ip: nextProps.item,
+        })
+    }
+
     toggleChecked() {
         this.props.item.checked = !this.props.item.checked;
         this.forceUpdate();
@@ -60,12 +79,15 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
 
         return (
             <ListItem style={style}>
-                <ListItemContent>{this.props.item.ip}</ListItemContent>
+                <ListItemContent>{this.state.ip.ip}</ListItemContent>
                 <ListItemAction>
-                    <Button onClick={this.toggleChecked.bind(this)} disabled={this.props.item.checked}>Hide</Button>
+                    <div>{this.state.ip.traceSteps} | {this.state.ip.traceLatency}</div>
                 </ListItemAction>
                 <ListItemAction>
-                    <Button onClick={this.startTrace.bind(this)} disabled={this.props.item.checked}>Trace</Button>
+                    <Button onClick={this.toggleChecked.bind(this)} disabled={this.state.ip.checked}>Hide</Button>
+                </ListItemAction>
+                <ListItemAction>
+                    <Button onClick={this.startTrace.bind(this)} disabled={this.state.ip.checked}>Trace</Button>
                 </ListItemAction>
             </ListItem>
         );

@@ -6,9 +6,12 @@ namespace Fedot\NetMonitor\Service;
 use DI\Annotation\Inject;
 use Fedot\NetMonitor\DTO\Connection;
 use Fedot\NetMonitor\DTO\TargetIp;
+use Fedot\NetMonitor\DTO\TraceResult;
+use Fedot\Ping\Service\TraceRouteNG;
 use JJG\Ping;
 use PhpWhois\Whois;
 use Predis\Client;
+use React\EventLoop\LoopInterface;
 
 class ConnectionsAnalyzer
 {
@@ -17,6 +20,11 @@ class ConnectionsAnalyzer
      * @var Client
      */
     protected $redisClient;
+
+    /**
+     * @var LoopInterface
+     */
+    protected $eventLoop;
 
     /**
      * @var string
@@ -44,9 +52,14 @@ class ConnectionsAnalyzer
     protected $skippedRange;
 
     /**
-     * @var TargetIp
+     * @var TargetIp[]
      */
-    protected $targetIps;
+    protected $targetIps = [];
+
+    /**
+     * @var TraceRouteNG[]
+     */
+    protected $inProcessTrace = [];
 
     public function __construct()
     {
@@ -85,6 +98,20 @@ class ConnectionsAnalyzer
             [ip2long('5.17.192.106'), ip2long('5.17.192.106')],
             [ip2long('95.138.128.0'), ip2long('95.138.191.255')],
         ];
+    }
+
+    /**
+     * @Inject
+     *
+     * @param LoopInterface $eventLoop
+     *
+     * @return $this
+     */
+    public function setEventLoop(LoopInterface $eventLoop)
+    {
+        $this->eventLoop = $eventLoop;
+
+        return $this;
     }
 
     /**
@@ -358,6 +385,32 @@ class ConnectionsAnalyzer
             return $this->targetIps[$targetIp->ip];
         }
 
+        $this->targetIps[$targetIp->ip] = $targetIp;
+
         return $targetIp;
+    }
+
+    /**
+     * @param TargetIp[] $targetIps
+     */
+    public function autoPingTrace($targetIps)
+    {
+        foreach ($targetIps as $targetIp) {
+            if (!isset($this->inProcessTrace[$targetIp->ip])) {
+                $traceRouteNG = new TraceRouteNG();
+                $traceRouteNG->setEventLoop($this->eventLoop);
+                $traceRouteNG->setHost($targetIp->ip);
+                $traceRouteNG->setTraceCallback(function (TraceResult $traceResult) use ($targetIp) {
+                    if ($traceResult->ip1 || $traceResult->ip2 || $traceResult->ip3) {
+                        $targetIp->traceSteps = $traceResult->step;
+                        $targetIp->lastTracedIp = $traceResult->ip1 ?: $traceResult->ip2 ?: $traceResult->ip3;
+                        $targetIp->traceLatency = $traceResult->latency1 ?: $traceResult->latency2 ?: $traceResult->latency3;
+                    }
+                });
+                $traceRouteNG->trace();
+
+                $this->inProcessTrace[$targetIp->ip] = $traceRouteNG;
+            }
+        }
     }
 }
