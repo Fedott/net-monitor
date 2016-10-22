@@ -50,6 +50,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
     }
 
     updateCallback(response: Response) {
+        var oldList = this.state.ipList;
         var newList: {[id:string]: Ip} = {};
         response.result.ips.forEach(function (ipObject) {
             newList[ipObject.ip] = {
@@ -59,6 +60,10 @@ export class IpList extends React.Component<IpListProps, IpListState> {
                 traceSteps: ipObject.traceSteps,
                 traceFails: ipObject.traceFails,
             };
+
+            if (null != oldList[ipObject.ip]) {
+                newList[ipObject.ip].checked = oldList[ipObject.ip].checked;
+            }
         });
 
         this.setState({ipList: newList});
