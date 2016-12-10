@@ -1,9 +1,7 @@
-/// <reference path="../typings/browser/ambient/react/react.d.ts" />
-
 import * as React from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from 'react-mdl';
 import {Container} from './container';
-import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
+import {RequestFactory, WsConnector, Response} from './ws/serverConnector';
 
 interface TraceDialogState {
     openDialog: boolean;
@@ -32,7 +30,7 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
 
         this.ip = ip;
 
-        var request = RequestFactory.createRequest();
+        const request = RequestFactory.createRequest();
         request.command = "startTrace";
         request.params = {
             "ip": ip
@@ -57,8 +55,8 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
     }
 
     render() {
-        var i = 1;
-        var content = this.state.content.split("\n").map((str) => {
+        let i = 1;
+        const content = this.state.content.split("\n").map((str) => {
             i++;
             return (
                 <span key={i}>
@@ -66,13 +64,6 @@ export class TraceDialog extends React.Component<TraceDialogProps, TraceDialogSt
                 </span>
             )
         });
-
-        if (this.state.openDialog) {
-            setTimeout(() => {
-                //noinspection TypeScriptUnresolvedVariable
-                document.querySelector("dialog").style.top = "10px";
-            })
-        }
 
         return (
             <Dialog open={this.state.openDialog}>

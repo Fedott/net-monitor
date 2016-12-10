@@ -1,10 +1,8 @@
-/// <reference path="../typings/browser/ambient/react/react.d.ts" />
-
 import * as React from 'react';
 import {IpListItem, Ip} from './ipListItem';
 import {RequestFactory, WsConnector, Response, Request} from './ws/serverConnector';
 
-import {List, Switch, Badge} from 'react-mdl';
+import {List, Switch} from 'react-mdl';
 
 export interface IpListState {
     ipList?: {[id:string]: Ip};
@@ -41,7 +39,7 @@ export class IpList extends React.Component<IpListProps, IpListState> {
             return;
         }
 
-        var request:Request = RequestFactory.createRequest();
+        const request: Request = RequestFactory.createRequest();
         request.command = 'getIps';
         request.resultFunction = this.updateCallback.bind(this);
         request.params = {withoutFilter: !this.state.filtered};
@@ -50,8 +48,8 @@ export class IpList extends React.Component<IpListProps, IpListState> {
     }
 
     updateCallback(response: Response) {
-        var oldList = this.state.ipList;
-        var newList: {[id:string]: Ip} = {};
+        const oldList = this.state.ipList;
+        const newList: {[id: string]: Ip} = {};
         response.result.ips.forEach(function (ipObject) {
             newList[ipObject.ip] = {
                 ip: ipObject.ip,
@@ -77,13 +75,13 @@ export class IpList extends React.Component<IpListProps, IpListState> {
     }
 
     render() {
-        var IpItems = [];
-        for (var itemKey in this.state.ipList) {
-            var item:Ip = this.state.ipList[itemKey];
+        const IpItems = [];
+        for (let itemKey in this.state.ipList) {
+            const item: Ip = this.state.ipList[itemKey];
             IpItems.push(<IpListItem item={item} key={item.ip} />);
         }
 
-        var stopStartMessage;
+        let stopStartMessage;
         if (this.reloadListCycle) {
             stopStartMessage = "Остановить обновление";
         } else {

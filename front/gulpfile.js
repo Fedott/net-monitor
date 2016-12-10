@@ -24,7 +24,7 @@ gulp.task('css', function () {
 gulp.task('compile', function () {
     var result = gulp
         .src('src/**/*{ts,tsx}')
-        .pipe(ts(project));
+        .pipe(project());
     return result.js.pipe(gulp.dest('.tmp'));
 });
 

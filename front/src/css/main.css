@@ -2,19 +2,6 @@ h1 {
     color: red;
 }
 
-#chart {
-    height: 200px;
-    width: 600px;
-}
-
-.ip-list {
-    max-width: 300px;
-}
-
-#traceDialog .mdl-dialog {
-    width: 90%;
-}
-
 #controls {
     display: flex;
     flex-direction: row;

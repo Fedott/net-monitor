@@ -1,10 +1,5 @@
-/// <reference path="../typings/browser/ambient/react/react.d.ts" />
-/// <reference path="../typings/react-mdl.d.ts" />
-
 import * as React from 'react'
-import {ListItem, ListItemContent, ListItemAction, Switch, IconButton, Button} from 'react-mdl'
-import {RequestFactory, WsConnector} from "./ws/serverConnector";
-import {Chart} from "./charts";
+import {ListItem, ListItemContent, ListItemAction, Button} from 'react-mdl'
 import {Container} from "./container";
 
 export interface Ip {
@@ -45,35 +40,14 @@ export class IpListItem extends React.Component<IpItemProps, IpItemState> {
         this.forceUpdate();
     }
 
-    togglePing() {
-        this.props.item.ping = !this.props.item.ping;
-
-        console.log(this.props.item);
-        var request = RequestFactory.createRequest();
-        if (this.props.item.ping) {
-            request.command = "startPing";
-        } else {
-            request.command = "stopPing";
-            Container.chart.clearDataByIp(this.props.item.ip);
-        }
-        request.params = {ip: this.props.item.ip};
-
-        WsConnector.sendRequest(request);
-    }
-
     startTrace() {
-        if (this.props.item.ping) {
-            this.togglePing();
-            this.forceUpdate();
-        }
-
         Container.traceDialog.startTrace(this.props.item.ip);
     }
 
     render() {
-        var style = {
-            color: null,
-        };
+        const style = {
+    color: null,
+};
         if (this.props.item.checked) {
             style.color = "lightgray";
         }

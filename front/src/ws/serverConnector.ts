@@ -14,15 +14,15 @@ class RequestFactoryClass {
     id: number = 1;
 
     createRequest() {
-        var request = new Request();
+        const request = new Request();
         request.id = this.id++;
 
         return request;
     }
 }
 
-var RequestFactoryInstance = new RequestFactoryClass();
-export var RequestFactory = RequestFactoryInstance;
+const RequestFactoryInstance = new RequestFactoryClass();
+export let RequestFactory = RequestFactoryInstance;
 
 class WsConnectorClass {
     requests: {[id:number]: Request};
@@ -58,16 +58,16 @@ class WsConnectorClass {
 
         setTimeout(this.connectToWebSocket.bind(this), 1000);
     }
-    
+
     emmitConnectionStatusEvent() {
         this.connectionListeners.forEach((func) => {
             func(this.isConnected);
         })
     }
-    
+
     sendRequest(request: Request) {
         this.requests[request.id] = request;
-        
+
         this.wsConnection.send(JSON.stringify({
             id: request.id,
             command: request.command,
@@ -76,10 +76,10 @@ class WsConnectorClass {
     }
 
     parseResponse(event: MessageEvent) {
-        var data = JSON.parse(event.data);
-        var requestId = data.id;
+        const data = JSON.parse(event.data);
+        const requestId = data.id;
         if (null != this.requests[requestId]) {
-            var response = new Response();
+            const response = new Response();
             response.result = data.result;
             if (null != this.requests[requestId].resultFunction) {
                 this.requests[requestId].resultFunction(response);
@@ -91,5 +91,5 @@ class WsConnectorClass {
         }
     }
 }
-var WsConnectorInstance = new WsConnectorClass();
-export var WsConnector = WsConnectorInstance;
+const WsConnectorInstance = new WsConnectorClass();
+export let WsConnector = WsConnectorInstance;
